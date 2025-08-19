@@ -6,6 +6,22 @@ import { CMSCanvas } from '@/components/cms/CMSCanvas';
 import { CMSPanel } from '@/components/cms/CMSPanel';
 
 export default function ComponentTestPage() {
+  // Mock data for testing
+  const mockBlocks = [
+    {
+      id: 'test-block-1',
+      type: 'hero',
+      content: {
+        title: 'Test Hero',
+        subtitle: 'Test subtitle',
+        buttonText: 'Test Button'
+      },
+      order: 1
+    }
+  ];
+
+  const mockBlock = mockBlocks[0];
+
   return (
     <div className="min-h-screen bg-yellow-100 p-4">
       <h1 className="text-2xl font-bold text-yellow-800 mb-4">TEST DE COMPONENTES INDIVIDUALES</h1>
@@ -29,6 +45,8 @@ export default function ComponentTestPage() {
           <h2 className="text-lg font-bold text-green-800 mb-2">2. TOOLBAR:</h2>
           <CMSToolbar 
             activeTab="content"
+            viewMode="desktop"
+            onViewModeChange={() => {}}
             onSave={() => {}}
             onPreview={() => {}}
             onPublish={() => {}}
@@ -40,8 +58,13 @@ export default function ComponentTestPage() {
           <h2 className="text-lg font-bold text-purple-800 mb-2">3. CANVAS:</h2>
           <div className="h-64">
             <CMSCanvas 
+              blocks={mockBlocks}
               selectedBlock={null}
+              viewMode="desktop"
               onBlockSelect={() => {}}
+              onAddBlock={() => {}}
+              onDeleteBlock={() => {}}
+              onUpdateBlock={() => {}}
             />
           </div>
         </div>
@@ -51,8 +74,9 @@ export default function ComponentTestPage() {
           <h2 className="text-lg font-bold text-red-800 mb-2">4. PANEL:</h2>
           <div className="h-64">
             <CMSPanel 
-              blockId="test-block"
+              block={mockBlock}
               onClose={() => {}}
+              onUpdate={() => {}}
             />
           </div>
         </div>
