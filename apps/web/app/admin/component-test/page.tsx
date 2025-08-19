@@ -19,6 +19,7 @@ export default function ComponentTestPage() {
               activeTab="content"
               onTabChange={() => {}}
               onBlockSelect={() => {}}
+              onAddBlock={() => {}}
             />
           </div>
         </div>
