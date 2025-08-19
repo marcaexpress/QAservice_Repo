@@ -4,12 +4,18 @@
   "devCommand": "cd apps/web && npm run dev",
   "installCommand": "npm install",
   "framework": "nextjs",
+  "outputDirectory": "apps/web/.next",
   "env": {
     "NODE_ENV": "production"
   },
   "build": {
     "env": {
       "NODE_ENV": "production"
+    }
+  },
+  "functions": {
+    "apps/web/app/api/**/*.ts": {
+      "runtime": "nodejs18.x"
     }
   },
   "routes": [
