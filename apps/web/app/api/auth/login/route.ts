@@ -1,0 +1,105 @@
+import { NextRequest, NextResponse } from 'next/server';
+import { compare } from 'bcryptjs';
+import { prisma } from '@/lib/prisma';
+import { z } from 'zod';
+import { generateToken, setAuthCookie } from '@/lib/jwt';
+
+// Esquema de validación para el login
+const loginSchema = z.object({
+  email: z.string().email('Email inválido'),
+  password: z.string().min(1, 'La contraseña es requerida'),
+});
+
+export async function POST(request: NextRequest) {
+  try {
+    const body = await request.json();
+    const { email, password } = loginSchema.parse(body);
+
+    // Buscar usuario con password usando raw query para evitar problemas de tipos
+    const user = await prisma.$queryRaw`
+      SELECT u.id, u.email, u.name, u.password, u."organizationId"
+      FROM users u 
+      WHERE u.email = ${email}
+    ` as any[];
+
+    if (!user || user.length === 0) {
+      return NextResponse.json(
+        { error: 'Credenciales inválidas' },
+        { status: 401 }
+      );
+    }
+
+    const userData = user[0];
+
+    // Verificar contraseña
+    if (!userData.password) {
+      return NextResponse.json(
+        { error: 'Este usuario no tiene contraseña configurada' },
+        { status: 401 }
+      );
+    }
+
+    const isPasswordValid = await compare(password, userData.password);
+    if (!isPasswordValid) {
+      return NextResponse.json(
+        { error: 'Credenciales inválidas' },
+        { status: 401 }
+      );
+    }
+
+    // Buscar roles del usuario
+    const roles = await prisma.$queryRaw`
+      SELECT r.name, r.description
+      FROM roles r
+      INNER JOIN role_assignments ra ON r.id = ra."roleId"
+      WHERE ra."userId" = ${userData.id}
+    ` as any[];
+
+    // Generar JWT token
+    const tokenPayload = {
+      userId: userData.id,
+      email: userData.email,
+      name: userData.name || '',
+      roles: roles.map((r: any) => r.name),
+      organizationId: userData.organizationId || undefined,
+    };
+
+    const token = generateToken(tokenPayload);
+    console.log('🔑 [LOGIN] Token JWT generado:', token.substring(0, 50) + '...');
+
+    // Crear respuesta exitosa
+    const response = NextResponse.json({
+      message: 'Login exitoso',
+      user: {
+        id: userData.id,
+        email: userData.email,
+        name: userData.name,
+        roles: roles.map((r: any) => r.name),
+        organizationId: userData.organizationId,
+      },
+      roles: roles.map((r: any) => r.name)
+    });
+
+    // Establecer cookie de autenticación
+    console.log('🍪 [LOGIN] Estableciendo cookie auth-token...');
+    const responseWithCookie = setAuthCookie(response, token);
+    console.log('✅ [LOGIN] Cookie establecida, respuesta preparada');
+    
+    return responseWithCookie;
+
+  } catch (error) {
+    console.error('Error en login:', error);
+    
+    if (error instanceof z.ZodError) {
+      return NextResponse.json(
+        { error: 'Datos inválidos', details: error.errors },
+        { status: 400 }
+      );
+    }
+
+    return NextResponse.json(
+      { error: 'Error interno del servidor' },
+      { status: 500 }
+    );
+  }
+}
