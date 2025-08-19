@@ -1,0 +1,30 @@
+# 🌐 Variables de Entorno para Vercel
+# Copia este archivo y renómbralo a .env.local en tu proyecto local
+# En Vercel, configura estas variables en el dashboard del proyecto
+
+# 🗄️ Base de Datos
+DATABASE_URL="postgresql://usuario:password@host/database?sslmode=require"
+SHADOW_DATABASE_URL="postgresql://usuario:password@host/database?sslmode=require"
+
+# 🔐 Autenticación
+JWT_SECRET="tu-super-secret-jwt-key-cambiar-en-produccion"
+NEXTAUTH_SECRET="dev-secret-key-change-in-production"
+NEXTAUTH_URL="https://tu-dominio.vercel.app"
+
+# 🎨 CMS
+CMS_EDITOR_ENABLED=true
+CMS_AUTOSAVE_INTERVAL=5000
+CMS_PREVIEW_ENABLED=true
+
+# 🌍 Entorno
+NODE_ENV=production
+
+# 📧 Email (opcional)
+SMTP_HOST="smtp.gmail.com"
+SMTP_PORT=587
+SMTP_USER="tu-email@gmail.com"
+SMTP_PASS="tu-password-app"
+
+# 🔍 Analytics (opcional)
+GOOGLE_ANALYTICS_ID="G-XXXXXXXXXX"
+GOOGLE_TAG_MANAGER_ID="GTM-XXXXXXX"
