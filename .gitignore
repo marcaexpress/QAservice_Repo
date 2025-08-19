@@ -90,3 +90,4 @@ jspm_packages/
 # Test files (temporales)
 test-*.js
 test-*.ts
+.env*.local
