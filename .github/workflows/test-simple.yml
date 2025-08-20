@@ -1,0 +1,34 @@
+name: Test Vercel Connection - Simple
+
+on:
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Test Vercel CLI
+      run: |
+        echo "=== TESTING VERCEL CONNECTION ==="
+        echo ""
+        
+        # Install Vercel CLI
+        npm install --global vercel@latest
+        
+        # Test 1: Basic connection
+        echo "Test 1: Basic connection..."
+        vercel whoami --token ${{ secrets.VERCEL_TOKEN }}
+        
+        echo ""
+        echo "Test 2: List projects..."
+        vercel project ls --token ${{ secrets.VERCEL_TOKEN }}
+        
+        echo ""
+        echo "Test 3: Test specific project..."
+        vercel project inspect ${{ secrets.VERCEL_PROJECT_ID }} --token ${{ secrets.VERCEL_TOKEN }}
+        
+        echo ""
+        echo "=== ALL TESTS COMPLETED ==="
