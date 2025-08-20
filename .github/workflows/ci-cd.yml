@@ -31,11 +31,12 @@ jobs:
       run: npm run typecheck
       continue-on-error: true
     
-    - name: Build application
+    - name: Build application (Development)
       run: npm run build
       env:
-        DATABASE_URL: ${{ secrets.DATABASE_URL }}
-        JWT_SECRET: ${{ secrets.JWT_SECRET }}
+        NODE_ENV: development
+        DATABASE_URL: ${{ secrets.DATABASE_URL_DEVELOPMENT }}
+        JWT_SECRET: ${{ secrets.JWT_SECRET_DEVELOPMENT }}
 
   deploy:
     needs: test
@@ -62,10 +63,13 @@ jobs:
           echo "Removed .vercel directory"
         fi
     
-    - name: Deploy to Vercel (Clean)
+    - name: Deploy to Vercel (Production)
       run: |
-        echo "Deploying to Vercel with clean configuration..."
+        echo "Deploying to Vercel with production configuration..."
         vercel --prod --token ${{ secrets.VERCEL_TOKEN }} --yes --force
       env:
+        NODE_ENV: production
         VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
         VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+        DATABASE_URL: ${{ secrets.DATABASE_URL_PRODUCTION }}
+        JWT_SECRET: ${{ secrets.JWT_SECRET_PRODUCTION }}

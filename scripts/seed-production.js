@@ -54,33 +54,33 @@ const initialData = {
     {
       id: 'org_qa_services',
       name: 'QA Services',
-      description: 'Organización principal de QA Services'
+      slug: 'qa-services'
     }
   ],
   
   permissions: [
     // Usuarios
-    { id: 'perm_user_create', name: 'Crear Usuarios', description: 'Crear nuevos usuarios', resource: 'user', action: 'create' },
-    { id: 'perm_user_read', name: 'Leer Usuarios', description: 'Ver información de usuarios', resource: 'user', action: 'read' },
-    { id: 'perm_user_update', name: 'Actualizar Usuarios', description: 'Modificar usuarios existentes', resource: 'user', action: 'update' },
-    { id: 'perm_user_delete', name: 'Eliminar Usuarios', description: 'Eliminar usuarios', resource: 'user', action: 'delete' },
+    { id: 'perm_user_create', action: 'create', resource: 'user' },
+    { id: 'perm_user_read', action: 'read', resource: 'user' },
+    { id: 'perm_user_update', action: 'update', resource: 'user' },
+    { id: 'perm_user_delete', action: 'delete', resource: 'user' },
     
     // Organizaciones
-    { id: 'perm_org_create', name: 'Crear Organizaciones', description: 'Crear nuevas organizaciones', resource: 'organization', action: 'create' },
-    { id: 'perm_org_read', name: 'Leer Organizaciones', description: 'Ver información de organizaciones', resource: 'organization', action: 'read' },
-    { id: 'perm_org_update', name: 'Actualizar Organizaciones', description: 'Modificar organizaciones', resource: 'organization', action: 'update' },
-    { id: 'perm_org_delete', name: 'Eliminar Organizaciones', description: 'Eliminar organizaciones', resource: 'organization', action: 'delete' },
+    { id: 'perm_org_create', action: 'create', resource: 'organization' },
+    { id: 'perm_org_read', action: 'read', resource: 'organization' },
+    { id: 'perm_org_update', action: 'update', resource: 'organization' },
+    { id: 'perm_org_delete', action: 'delete', resource: 'organization' },
     
     // CMS
-    { id: 'perm_cms_create', name: 'Crear Contenido', description: 'Crear nuevo contenido en CMS', resource: 'cms', action: 'create' },
-    { id: 'perm_cms_read', name: 'Leer Contenido', description: 'Ver contenido del CMS', resource: 'cms', action: 'read' },
-    { id: 'perm_cms_update', name: 'Actualizar Contenido', description: 'Modificar contenido existente', resource: 'cms', action: 'update' },
-    { id: 'perm_cms_delete', name: 'Eliminar Contenido', description: 'Eliminar contenido del CMS', resource: 'cms', action: 'delete' },
-    { id: 'perm_cms_publish', name: 'Publicar Contenido', description: 'Publicar contenido en producción', resource: 'cms', action: 'publish' },
+    { id: 'perm_cms_create', action: 'create', resource: 'cms' },
+    { id: 'perm_cms_read', action: 'read', resource: 'cms' },
+    { id: 'perm_cms_update', action: 'update', resource: 'cms' },
+    { id: 'perm_cms_delete', action: 'delete', resource: 'cms' },
+    { id: 'perm_cms_publish', action: 'publish', resource: 'cms' },
     
     // Administración
-    { id: 'perm_admin_access', name: 'Acceso Admin', description: 'Acceso al panel de administración', resource: 'admin', action: 'access' },
-    { id: 'perm_system_config', name: 'Configuración Sistema', description: 'Configurar parámetros del sistema', resource: 'system', action: 'configure' }
+    { id: 'perm_admin_access', action: 'access', resource: 'admin' },
+    { id: 'perm_system_config', action: 'configure', resource: 'system' }
   ],
   
   roles: [
@@ -174,7 +174,7 @@ async function seedProduction() {
         data: {
           id: org.id,
           name: org.name,
-          description: org.description
+          slug: org.slug
         }
       });
     }
@@ -186,10 +186,8 @@ async function seedProduction() {
       await prisma.permission.create({
         data: {
           id: perm.id,
-          name: perm.name,
-          description: perm.description,
-          resource: perm.resource,
-          action: perm.action
+          action: perm.action,
+          resource: perm.resource
         }
       });
     }
@@ -285,32 +283,28 @@ async function seedProduction() {
     await prisma.roleAssignment.create({
       data: {
         userId: 'user_super_admin',
-        roleId: 'role_super_admin',
-        organizationId: 'org_qa_services'
+        roleId: 'role_super_admin'
       }
     });
     
     await prisma.roleAssignment.create({
       data: {
         userId: 'user_admin',
-        roleId: 'role_admin',
-        organizationId: 'org_qa_services'
+        roleId: 'role_admin'
       }
     });
     
     await prisma.roleAssignment.create({
       data: {
         userId: 'user_editor',
-        roleId: 'role_editor',
-        organizationId: 'org_qa_services'
+        roleId: 'role_editor'
       }
     });
     
     await prisma.roleAssignment.create({
       data: {
         userId: 'user_viewer',
-        roleId: 'role_viewer',
-        organizationId: 'org_qa_services'
+        roleId: 'role_viewer'
       }
     });
     
