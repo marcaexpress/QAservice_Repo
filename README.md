@@ -1,6 +1,6 @@
 # 🚀 QA Services - Plataforma de Servicios QA
 
-> **Última actualización**: $(Get-Date -Format "yyyy-MM-dd HH:mm:ss") - GitHub Actions configurado ✅
+> **Última actualización**: 2025-08-20 08:15:00 - Secrets verificados ✅
 
 ## 📋 Descripción del Proyecto
 
