@@ -1,6 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -10,24 +7,19 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-// Configuración del seed
-/// @seed="npx tsx prisma/seed.ts"
-
 model User {
-  id             String   @id @default(cuid())
-  email          String   @unique
-  password       String?  // Campo para autenticación con credenciales
+  id             String           @id @default(cuid())
+  email          String           @unique
+  password       String?
   name           String?
   emailVerified  DateTime?
   image          String?
-  createdAt      DateTime @default(now())
-  updatedAt      DateTime @updatedAt
-  
-  // Relations
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
   organizationId String?
-  organization   Organization? @relation(fields: [organizationId], references: [id])
-  roles         RoleAssignment[]
-  
+  roles          RoleAssignment[]
+  organization   Organization?    @relation(fields: [organizationId], references: [id])
+
   @@map("users")
 }
 
@@ -37,40 +29,34 @@ model Organization {
   slug      String   @unique
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  
-  // Relations
-  users     User[]
   roles     Role[]
-  
+  users     User[]
+
   @@map("organizations")
 }
 
 model Role {
-  id             String   @id @default(cuid())
+  id             String           @id @default(cuid())
   name           String
   description    String?
   organizationId String?
-  createdAt      DateTime @default(now())
-  updatedAt      DateTime @updatedAt
-  
-  // Relations
-  organization   Organization? @relation(fields: [organizationId], references: [id])
-  permissions   RolePermission[]
-  users         RoleAssignment[]
-  
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
+  users          RoleAssignment[]
+  permissions    RolePermission[]
+  organization   Organization?    @relation(fields: [organizationId], references: [id])
+
   @@map("roles")
 }
 
 model Permission {
-  id          String   @id @default(cuid())
-  action      String   // e.g., "create", "read", "update", "delete"
-  resource   String   // e.g., "page", "user", "organization"
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-  
-  // Relations
-  roles      RolePermission[]
-  
+  id        String           @id @default(cuid())
+  action    String
+  resource  String
+  createdAt DateTime         @default(now())
+  updatedAt DateTime         @updatedAt
+  roles     RolePermission[]
+
   @@unique([action, resource])
   @@map("permissions")
 }
@@ -80,11 +66,9 @@ model RolePermission {
   roleId       String
   permissionId String
   createdAt    DateTime   @default(now())
-  
-  // Relations
-  role         Role       @relation(fields: [roleId], references: [id], onDelete: Cascade)
   permission   Permission @relation(fields: [permissionId], references: [id], onDelete: Cascade)
-  
+  role         Role       @relation(fields: [roleId], references: [id], onDelete: Cascade)
+
   @@unique([roleId, permissionId])
   @@map("role_permissions")
 }
@@ -94,11 +78,9 @@ model RoleAssignment {
   userId    String
   roleId    String
   createdAt DateTime @default(now())
-  
-  // Relations
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   role      Role     @relation(fields: [roleId], references: [id], onDelete: Cascade)
-  
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
   @@unique([userId, roleId])
   @@map("role_assignments")
 }
