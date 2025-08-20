@@ -54,10 +54,18 @@ jobs:
     - name: Install Vercel CLI
       run: npm install --global vercel@latest
     
-    - name: Deploy to Vercel
+    - name: Clean Vercel Configuration
       run: |
-        echo "Deploying to Vercel..."
-        vercel --prod --token ${{ secrets.VERCEL_TOKEN }} --yes
+        echo "Cleaning Vercel configuration..."
+        if [ -d ".vercel" ]; then
+          rm -rf .vercel
+          echo "Removed .vercel directory"
+        fi
+    
+    - name: Deploy to Vercel (Clean)
+      run: |
+        echo "Deploying to Vercel with clean configuration..."
+        vercel --prod --token ${{ secrets.VERCEL_TOKEN }} --yes --force
       env:
         VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
         VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
