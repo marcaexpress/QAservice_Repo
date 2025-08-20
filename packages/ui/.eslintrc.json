@@ -1,6 +1,6 @@
 {
-  "extends": ["../../.eslintrc.json"],
-  "rules": {
-    "react/react-in-jsx-scope": "off"
+  "extends": ["@qa-services/config/eslint"],
+  "parserOptions": {
+    "project": "./tsconfig.json"
   }
 }

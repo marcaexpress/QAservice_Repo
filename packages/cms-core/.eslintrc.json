@@ -1,3 +1,6 @@
 {
-  "extends": ["../../.eslintrc.json"]
+  "extends": ["@qa-services/config/eslint"],
+  "parserOptions": {
+    "project": "./tsconfig.json"
+  }
 }
