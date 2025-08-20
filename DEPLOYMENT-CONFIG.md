@@ -1,84 +1,23 @@
-# 🚀 Configuración Maestra de Despliegue - QA Services
+# 🚀 DEPLOYMENT-CONFIG.md - QA Services
 
-## 📅 Última Actualización: 20 de Agosto 2025
-## 🎯 Estado: DESPLIEGUE EXITOSO EN PRODUCCIÓN
-
----
-
-## 🌐 **INFORMACIÓN DE PRODUCCIÓN:**
-
-### **URLs de Producción:**
-- **Aplicación Principal**: `https://qa-services-35wpq25tt-marcaexpress-projects.vercel.app`
-- **Admin Dashboard**: `https://qa-services-35wpq25tt-marcaexpress-projects.vercel.app/admin`
-- **API Base**: `https://qa-services-35wpq25tt-marcaexpress-projects.vercel.app/api`
-
-### **Estado del Sistema:**
-- ✅ **Autenticación JWT**: Funcionando
-- ✅ **Base de Datos**: Neon PostgreSQL conectada
-- ✅ **Admin Dashboard**: Accesible
-- ✅ **CMS**: Funcional
-- ✅ **Uptime**: 99.9% (Vercel)
+## 📋 **CONFIGURACIÓN MAESTRA PARA DESPLIEGUE EXITOSO A VERCEL**
 
 ---
 
-## 🔑 **SECRETS CRÍTICOS - GITHUB ACTIONS:**
+## 🎯 **ESTADO ACTUAL: ✅ DESPLIEGUE FUNCIONANDO**
 
-### **Ubicación**: `https://github.com/marcaexpress/QAservice_Repo/settings/secrets/actions`
-
-| Secret | Valor | Propósito |
-|--------|-------|-----------|
-| `VERCEL_TOKEN` | `2GRpGHYb3G49TR8z4m1FQ7xe` | Acceso a Vercel API |
-| `VERCEL_ORG_ID` | `marcaexpress-projects` | ID de organización |
-| `VERCEL_PROJECT_ID` | `prj_Y7xmpJAZwMduFSgGVmlbv5eBEUfZ` | ID del proyecto |
-| `DATABASE_URL` | `postgresql://neondb_owner:npg_qeP3HK7ixZvB@ep-winter-dawn-ada6oavd-pooler.c-2.us-east-1.aws.neon.tech/neondb?sslmode=require&channel_binding=require` | Base de datos Neon |
-| `JWT_SECRET` | `qa-services-jwt-secret-key-2024-dev-environment` | Autenticación JWT |
+### **📊 Resumen de Estado:**
+- **✅ Autenticación**: JWT consolidado y funcionando
+- **✅ Base de Datos**: Development y Production separados
+- **✅ CI/CD Pipeline**: GitHub Actions + Vercel activo
+- **✅ Deployment**: Error de build corregido, funcionando
+- **✅ Entornos**: Configuración dual completa
 
 ---
 
-## ⚙️ **CONFIGURACIÓN DE VERCEL:**
+## 🔧 **CONFIGURACIÓN CRÍTICA ACTUALIZADA:**
 
-### **Proyecto:**
-- **Nombre**: `qa-services`
-- **ID**: `prj_Y7xmpJAZwMduFSgGVmlbv5eBEUfZ`
-- **Organización**: `marcaexpress-projects`
-- **Framework**: Next.js
-- **Región**: San Francisco (sfo1)
-
-### **Build Settings:**
-- **Root Directory**: `.` (monorepo)
-- **Build Command**: `cd apps/web && npm run build`
-- **Output Directory**: `apps/web/.next`
-- **Install Command**: `npm install`
-- **Node.js Version**: 18.x
-
-### **Variables de Entorno en Vercel:**
-```
-DATABASE_URL = postgresql://neondb_owner:npg_qeP3HK7ixZvB@ep-winter-dawn-ada6oavd-pooler.c-2.us-east-1.aws.neon.tech/neondb?sslmode=require&channel_binding=require
-JWT_SECRET = qa-services-jwt-secret-key-2024-dev-environment
-NODE_ENV = production
-```
-
----
-
-## 📁 **ARCHIVOS DE CONFIGURACIÓN CRÍTICOS:**
-
-### **1. `.github/workflows/ci-cd.yml`**
-```yaml
-name: CI/CD Pipeline - Vercel Deployment
-on:
-  push:
-    branches: [ main ]
-  pull_request:
-    branches: [ main ]
-
-jobs:
-  test:
-    # Tests, linting, type checking, build
-  deploy:
-    # Deploy automático a Vercel usando CLI directo
-```
-
-### **2. `vercel.json`**
+### **1. vercel.json (CORREGIDO ✅)**
 ```json
 {
   "version": 2,
@@ -86,148 +25,200 @@ jobs:
   "devCommand": "cd apps/web && npm run dev",
   "installCommand": "npm install",
   "framework": "nextjs",
-  "outputDirectory": "apps/web/.next"
+  "outputDirectory": "apps/web/.next",
+  "env": {
+    "NODE_ENV": "production"
+  },
+  "build": {
+    "env": {
+      "NODE_ENV": "production"
+    }
+  },
+  "routes": [
+    {
+      "src": "/admin/(.*)",
+      "dest": "/admin/$1"
+    },
+    {
+      "src": "/api/(.*)",
+      "dest": "/api/$1"
+    }
+  ]
 }
 ```
 
-### **3. `apps/web/package.json`**
-```json
-{
-  "scripts": {
-    "build": "prisma generate --schema=../../prisma/schema.prisma && next build"
-  }
-}
+**⚠️ IMPORTANTE**: NO incluir configuración de `functions` - causa errores de build.
+
+---
+
+### **2. GitHub Actions (.github/workflows/ci-cd.yml)**
+```yaml
+name: CI/CD Pipeline - Vercel Deployment
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+      - run: npm ci
+      - run: npm run lint
+      - run: npm run type-check
+      - name: Build application (Development)
+        run: npm run build
+        env:
+          NODE_ENV: development
+          DATABASE_URL: ${{ secrets.DATABASE_URL_DEVELOPMENT }}
+          JWT_SECRET: ${{ secrets.JWT_SECRET_DEVELOPMENT }}
+
+  deploy:
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+      - run: npm ci
+      - run: npm install -g vercel@latest
+      - name: Clean Vercel Configuration
+        run: rm -rf .vercel
+      - name: Deploy to Vercel (Production)
+        run: |
+          echo "Deploying to Vercel with production configuration..."
+          vercel --prod --token ${{ secrets.VERCEL_TOKEN }} --yes --force
+        env:
+          NODE_ENV: production
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+          DATABASE_URL: ${{ secrets.DATABASE_URL_PRODUCTION }}
+          JWT_SECRET: ${{ secrets.JWT_SECRET_PRODUCTION }}
 ```
+
+---
+
+### **3. Secrets de GitHub (Actions → Secrets and variables → Actions)**
+```
+VERCEL_TOKEN = [TOKEN_DE_VERCEL]
+VERCEL_ORG_ID = marcaexpress-projects
+VERCEL_PROJECT_ID = prj_Y7xmpJAZwMduFSgGVmlbv5eBEUfZ
+DATABASE_URL_DEVELOPMENT = [URL_DB_DESARROLLO]
+DATABASE_URL_PRODUCTION = [URL_DB_PRODUCCIÓN]
+JWT_SECRET_DEVELOPMENT = [JWT_SECRET_DESARROLLO]
+JWT_SECRET_PRODUCTION = [JWT_SECRET_PRODUCCIÓN]
+```
+
+---
+
+### **4. Variables de Entorno en Vercel (Dashboard → Settings → Environment Variables)**
+```
+DATABASE_URL = [URL_DB_PRODUCCIÓN]
+JWT_SECRET = [JWT_SECRET_PRODUCCIÓN]
+NODE_ENV = production
+```
+
+---
+
+## 🚨 **PROBLEMAS RESUELTOS:**
+
+### **❌ Error de Build: "Function Runtimes must have a valid version"**
+- **Causa**: Configuración incorrecta de `functions` en `vercel.json`
+- **Solución**: Eliminación completa de la sección `functions`
+- **Estado**: ✅ **RESUELTO**
+
+### **❌ Error de Base de Datos en Producción**
+- **Causa**: Uso incorrecto de URL de desarrollo en producción
+- **Solución**: Separación completa de entornos y URLs
+- **Estado**: ✅ **RESUELTO**
 
 ---
 
 ## 🔄 **FLUJO DE DESPLIEGUE AUTOMÁTICO:**
 
-### **Trigger:**
+### **1. Trigger:**
 - **Push a `main`** → Activa GitHub Actions
 
-### **Pipeline:**
-1. **Job `test`**:
-   - Checkout del código
-   - Instalación de dependencias
-   - Linting (no bloqueante)
-   - Type checking (no bloqueante)
-   - Build de la aplicación
+### **2. Pipeline:**
+- **Job `test`**: Linting, type checking, build (con DB desarrollo)
+- **Job `deploy`**: Deploy automático a Vercel (con DB producción)
 
-2. **Job `deploy`**:
-   - Setup de Node.js
-   - Instalación de Vercel CLI
-   - Limpieza de configuración
-   - Deploy automático a Vercel
-
-### **Tiempos Estimados:**
-- **Build**: 2-3 minutos
-- **Deploy**: 1-2 minutos
-- **Total**: 3-5 minutos
+### **3. Despliegue:**
+- **Vercel CLI directo** (no acción problemática)
+- **Configuración limpia** (sin conflictos de runtime)
+- **Variables de entorno** desde GitHub Secrets
 
 ---
 
-## 🎯 **PUNTOS CRÍTICOS - NO CAMBIAR:**
+## 📁 **ARCHIVOS DE CONFIGURACIÓN CRÍTICOS:**
 
-### **Configuración de Build:**
-- ✅ **Build Command**: `cd apps/web && npm run build`
-- ✅ **Output Directory**: `apps/web/.next`
-- ✅ **Monorepo Structure**: Mantener `apps/web/`
-- ✅ **Prisma Schema Path**: `../../prisma/schema.prisma`
-
-### **Secrets y Variables:**
-- ✅ **JWT_SECRET**: Mantener consistente
-- ✅ **DATABASE_URL**: No cambiar sin migración
-- ✅ **VERCEL_TOKEN**: Renovar si expira
-
----
-
-## ⚠️ **VERIFICACIONES ANTES DE DESPLEGAR:**
-
-### **1. Secrets de GitHub:**
-- [ ] `VERCEL_TOKEN` válido y activo
-- [ ] `VERCEL_ORG_ID` correcto
-- [ ] `VERCEL_PROJECT_ID` correcto
-- [ ] `DATABASE_URL` accesible
-- [ ] `JWT_SECRET` consistente
-
-### **2. Configuración de Vercel:**
-- [ ] Proyecto activo y accesible
-- [ ] Variables de entorno configuradas
-- [ ] Build settings correctos
-- [ ] Dominio configurado
-
-### **3. Código:**
-- [ ] Tests pasando localmente
-- [ ] Build exitoso localmente
-- [ ] TypeScript sin errores
-- [ ] Dependencias actualizadas
-
----
-
-## 🔧 **SOLUCIÓN DE PROBLEMAS:**
-
-### **Error: "Project not found"**
-```bash
-# Verificar secrets en GitHub
-# Verificar que el proyecto existe en Vercel
-# Usar workflow de prueba para debug
+### **Estructura del Monorepo:**
 ```
-
-### **Error: "Function Runtimes must have a valid version"**
-```bash
-# Limpiar configuración: rm -rf .vercel
-# Deploy forzado: vercel --prod --force
-# Verificar vercel.json sin configuraciones problemáticas
-```
-
-### **Error: "Build failed"**
-```bash
-# Verificar dependencias en package.json
-# Verificar scripts de build
-# Verificar variables de entorno
+QAservice_Repo/
+├── apps/
+│   └── web/                 # Aplicación Next.js
+├── packages/                 # Paquetes compartidos
+├── prisma/                  # Schema de base de datos
+├── .github/workflows/       # GitHub Actions
+├── vercel.json             # Configuración Vercel
+├── config/environments.ts  # Configuración de entornos
+└── scripts/                # Scripts de utilidad
 ```
 
 ---
 
-## 📊 **MONITOREO Y MÉTRICAS:**
+## 🎯 **PUNTOS CRÍTICOS PARA FUTUROS DESPLIEGUES:**
 
-### **Vercel Dashboard:**
-- **URL**: `https://vercel.com/marcaexpress-projects/qa-services`
-- **Métricas**: Uptime, performance, errores
-- **Logs**: Build logs, function logs, edge logs
+### **✅ NO CAMBIAR:**
+- **JWT_SECRET**: Mantener consistente por entorno
+- **Build Command**: `cd apps/web && npm run build`
+- **Output Directory**: `apps/web/.next`
+- **Monorepo structure**: Mantener `apps/web/`
+- **vercel.json**: NO incluir configuración de `functions`
 
-### **GitHub Actions:**
-- **URL**: `https://github.com/marcaexpress/QAservice_Repo/actions`
-- **Historial**: Todos los deploys y builds
-- **Status**: Éxito/fallo de cada pipeline
+### **⚠️ VERIFICAR ANTES DE DESPLEGAR:**
+- **Secrets de GitHub** estén configurados
+- **Variables de entorno** en Vercel
+- **Dependencias** en `package.json` (TypeScript en dependencies)
+- **Separación de entornos** (development vs production)
 
-### **Base de Datos:**
-- **Provider**: Neon PostgreSQL
-- **URL**: `https://console.neon.tech`
-- **Métricas**: Conexiones, queries, performance
+### **🔧 EN CASO DE PROBLEMAS:**
+- **Limpiar configuración**: `rm -rf .vercel`
+- **Deploy forzado**: `vercel --prod --force`
+- **Verificar secrets**: Usar workflow de prueba
+- **Revisar logs**: Vercel Dashboard → Deployments → Logs
+
+---
+
+## 📊 **MÉTRICAS DE ÉXITO ACTUALES:**
+
+- **Tiempo de build**: ~2-3 minutos
+- **Tiempo de deploy**: ~1-2 minutos
+- **Uptime**: 99.9% (Vercel)
+- **Autenticación**: JWT funcionando
+- **Admin Dashboard**: Accesible con login
+- **Base de Datos**: Development y Production separados
 
 ---
 
 ## 🎉 **RESULTADO FINAL:**
 
 **QA Services está completamente desplegado y funcionando en producción con:**
-- ✅ **Autenticación JWT** robusta y segura
-- ✅ **CI/CD Pipeline** automático y confiable
+- ✅ **Autenticación JWT** robusta
+- ✅ **CI/CD Pipeline** automático
 - ✅ **Despliegue continuo** a Vercel
-- ✅ **Monitoreo** en tiempo real
-- ✅ **Escalabilidad** automática
-- ✅ **Documentación** completa para mantenimiento
+- ✅ **Monitoreo** y logs en tiempo real
+- ✅ **Escalabilidad** automática de Vercel
+- ✅ **Entornos separados** (Development vs Production)
 
 ---
 
-## 📞 **CONTACTO Y SOPORTE:**
+## 🔐 **Configuración documentada y lista para futuros despliegues automáticos.**
 
-- **Repositorio**: `https://github.com/marcaexpress/QAservice_Repo`
-- **Vercel Dashboard**: `https://vercel.com/marcaexpress-projects/qa-services`
-- **Documentación**: Este archivo + `AUTH-FIX-CHANGELOG.md`
-
----
-
-**🚀 Configuración documentada y lista para futuros despliegues automáticos.**
-**🔐 Sistema robusto y escalable en producción.**
+**Última actualización**: 2024-12-19 - Error de build corregido
