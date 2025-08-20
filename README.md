@@ -1,13 +1,10 @@
-# 🎯 QA Services - Plataforma de Servicios de Calidad
+# 🚀 QA Services - Plataforma de Servicios QA
 
-## 📋 Descripción
+> **Última actualización**: $(Get-Date -Format "yyyy-MM-dd HH:mm:ss") - GitHub Actions configurado ✅
 
-QA Services es una plataforma moderna de servicios de calidad que incluye:
-- **Sitio web público** con información de servicios
-- **Panel de administración** con CMS visual drag & drop
-- **Sistema de autenticación** JWT personalizado
-- **Base de datos** PostgreSQL con Prisma ORM
-- **Arquitectura monorepo** con Turborepo
+## 📋 Descripción del Proyecto
+
+QA Services es una plataforma moderna y escalable para la gestión de servicios de calidad y testing, construida con tecnologías de vanguardia.
 
 ## 🚀 Despliegue Rápido
 
