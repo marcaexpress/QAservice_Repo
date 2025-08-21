@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { CMSService, PageAccessControl } from '@/lib/cms-service';
+import { cmsService } from '@/lib/cms-service';
 
 export async function GET(request: NextRequest) {
   try {
