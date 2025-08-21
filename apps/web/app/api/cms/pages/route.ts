@@ -61,6 +61,14 @@ export async function POST(request: NextRequest) {
     }
 
     // Usar el servicio centralizado
+    // Verificar que organizationId esté definido
+    if (!decoded.organizationId) {
+      return NextResponse.json(
+        { error: 'ID de organización no encontrado' },
+        { status: 400 }
+      );
+    }
+
     const page = await cmsService.createPage({
       title,
       slug,
