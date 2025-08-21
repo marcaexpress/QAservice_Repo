@@ -50,6 +50,7 @@ export default function ComponentTestPage() {
             onSave={() => {}}
             onPreview={() => {}}
             onPublish={() => {}}
+            currentPage={null}
           />
         </div>
 
