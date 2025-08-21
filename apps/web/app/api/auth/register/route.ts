@@ -29,7 +29,7 @@ export async function POST(request: NextRequest) {
 
     // Obtener la organización por defecto
     const organization = await prisma.organization.findFirst({
-      where: { slug: 'qa-services' },
+      where: { name: 'QA Services' },
     });
 
     if (!organization) {
