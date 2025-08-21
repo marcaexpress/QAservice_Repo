@@ -25,7 +25,7 @@ export async function GET(request: NextRequest) {
     
     // Obtener páginas existentes del CMS
     const existingCMSPages = await prisma.page.findMany({
-      select: { slug: true, title: true, id: true }
+              select: { title: true, id: true }
     });
 
     // Crear un mapa de páginas CMS existentes

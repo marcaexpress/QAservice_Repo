@@ -37,7 +37,7 @@ export async function GET(
               select: { id: true, name: true, email: true }
             },
             organization: {
-              select: { id: true, name: true, slug: true }
+              select: { id: true, name: true }
             }
           }
         },

@@ -38,7 +38,7 @@ export async function GET(request: NextRequest) {
           }
         },
         page: {
-          select: { title: true, slug: true }
+          select: { title: true }
         },
         parent: {
           select: { id: true, component: { select: { name: true } } }
@@ -159,7 +159,7 @@ export async function POST(request: NextRequest) {
           }
         },
         page: {
-          select: { title: true, slug: true }
+          select: { title: true }
         },
         parent: {
           select: { id: true, component: { select: { name: true } } }

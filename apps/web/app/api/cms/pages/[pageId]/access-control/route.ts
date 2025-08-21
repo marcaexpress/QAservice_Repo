@@ -35,7 +35,7 @@ export async function GET(
           select: { id: true, name: true, email: true }
         },
         organization: {
-          select: { id: true, name: true, slug: true }
+          select: { id: true, name: true }
         }
       },
       orderBy: { createdAt: 'asc' }
@@ -138,7 +138,7 @@ export async function POST(
           select: { id: true, name: true, email: true }
         },
         organization: {
-          select: { id: true, name: true, slug: true }
+          select: { id: true, name: true }
         }
       }
     });
