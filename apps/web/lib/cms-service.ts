@@ -402,6 +402,29 @@ export class CMSService {
       };
     }
   }
+
+  /**
+   * Obtiene todas las versiones de una página
+   */
+  async getPageVersions(pageId: string, userId: string) {
+    try {
+      const versions = await prisma.pageVersion.findMany({
+        where: { pageId },
+        orderBy: { version: 'desc' }
+      });
+
+      return {
+        success: true,
+        versions
+      };
+    } catch (error) {
+      console.error('Error getting page versions:', error);
+      return {
+        success: false,
+        message: 'Error al obtener las versiones'
+      };
+    }
+  }
 }
 
 // Exportar instancia singleton

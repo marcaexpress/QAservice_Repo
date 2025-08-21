@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { verifyToken } from '@/lib/jwt';
-import { CMSService } from '@/lib/cms-service';
+import { cmsService } from '@/lib/cms-service';
 
 export async function GET(
   request: NextRequest,
@@ -33,7 +33,7 @@ export async function GET(
     }
 
     // Get page versions
-    const result = await CMSService.getPageVersions(pageId, decoded.userId);
+    const result = await cmsService.getPageVersions(pageId, decoded.userId);
     
     if (!result.success) {
       return NextResponse.json(
