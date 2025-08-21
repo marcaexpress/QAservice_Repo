@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { verifyToken } from '@/lib/jwt';
-import { CMSService } from '@/lib/cms-service';
+import { cmsService } from '@/lib/cms-service';
 
 export async function DELETE(
   request: NextRequest,
@@ -41,7 +41,7 @@ export async function DELETE(
     }
 
     // Delete page version
-    const result = await CMSService.deletePageVersion(pageId, versionNumber, decoded.userId);
+    const result = await cmsService.deletePageVersion(pageId, versionNumber, decoded.userId);
     
     if (!result.success) {
       return NextResponse.json(
