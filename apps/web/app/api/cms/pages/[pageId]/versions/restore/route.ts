@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { verifyToken } from '@/lib/jwt';
-import { CMSService } from '@/lib/cms-service';
+import { cmsService } from '@/lib/cms-service';
 
 export async function POST(
   request: NextRequest,
@@ -43,7 +43,7 @@ export async function POST(
     }
 
     // Restore page version
-    const result = await CMSService.restorePageVersion(pageId, versionNumber, decoded.userId);
+    const result = await cmsService.restorePageVersion(pageId, versionNumber, decoded.userId);
     
     if (!result.success) {
       return NextResponse.json(

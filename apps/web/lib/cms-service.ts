@@ -357,6 +357,51 @@ export class CMSService {
       };
     }
   }
+
+  /**
+   * Restaura una versión específica de una página
+   */
+  async restorePageVersion(pageId: string, versionNumber: number, userId: string) {
+    try {
+      // Verificar que la versión existe
+      const pageVersion = await prisma.pageVersion.findFirst({
+        where: {
+          pageId,
+          version: versionNumber
+        }
+      });
+
+      if (!pageVersion) {
+        return {
+          success: false,
+          message: 'Versión no encontrada'
+        };
+      }
+
+      // Restaurar la página con el contenido de la versión
+      await prisma.page.update({
+        where: { id: pageId },
+        data: {
+          title: pageVersion.title,
+          description: pageVersion.description,
+          blocks: pageVersion.blocks,
+          updatedBy: userId,
+          updatedAt: new Date()
+        }
+      });
+
+      return {
+        success: true,
+        message: 'Versión restaurada exitosamente'
+      };
+    } catch (error) {
+      console.error('Error restoring page version:', error);
+      return {
+        success: false,
+        message: 'Error al restaurar la versión'
+      };
+    }
+  }
 }
 
 // Exportar instancia singleton
