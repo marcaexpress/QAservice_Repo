@@ -45,19 +45,19 @@ export async function GET(request: NextRequest) {
       console.log('Token verification failed, continuing as anonymous user');
     }
 
-    // Get page with access control
-    const result = await CMSService.getPage(slug, accessControl);
+    // Get page using cmsService
+    const page = await cmsService.getPage(slug);
     
-    if (!result.success) {
+    if (!page) {
       return NextResponse.json(
-        { error: result.message || 'Página no encontrada' },
+        { error: 'Página no encontrada' },
         { status: 404 }
       );
     }
 
     return NextResponse.json({
       success: true,
-      page: result.page
+      page
     });
 
   } catch (error) {
