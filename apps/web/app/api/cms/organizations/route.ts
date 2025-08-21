@@ -20,8 +20,7 @@ export async function GET(request: NextRequest) {
     const organizations = await prisma.organization.findMany({
       select: {
         id: true,
-        name: true,
-        slug: true
+        name: true
       },
       orderBy: { name: 'asc' }
     });
