@@ -35,6 +35,14 @@ export async function GET(request: NextRequest) {
     if (components.length === 0) {
       console.log('🔧 [API] Creando componente de prueba...');
       
+      // Verificar que organizationId esté definido
+      if (!decoded.organizationId) {
+        return NextResponse.json(
+          { error: 'ID de organización no encontrado' },
+          { status: 400 }
+        );
+      }
+      
       const testComponent = await prisma.component.create({
         data: {
           name: 'test_button',
