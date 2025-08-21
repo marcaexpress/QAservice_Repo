@@ -14,7 +14,11 @@ export async function GET(request: NextRequest) {
     }
 
     // Determine access control based on authentication
-    let accessControl: PageAccessControl = {
+    let accessControl: {
+      userId: string;
+      userRoles: string[];
+      organizationId?: string;
+    } = {
       userId: 'anonymous',
       userRoles: ['public'],
       organizationId: undefined
