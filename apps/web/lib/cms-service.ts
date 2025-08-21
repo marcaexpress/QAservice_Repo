@@ -317,6 +317,46 @@ export class CMSService {
       return [];
     }
   }
+
+  /**
+   * Elimina una versión específica de una página
+   */
+  async deletePageVersion(pageId: string, versionNumber: number, userId: string) {
+    try {
+      // Verificar que la versión existe
+      const pageVersion = await prisma.pageVersion.findFirst({
+        where: {
+          pageId,
+          version: versionNumber
+        }
+      });
+
+      if (!pageVersion) {
+        return {
+          success: false,
+          message: 'Versión no encontrada'
+        };
+      }
+
+      // Eliminar la versión
+      await prisma.pageVersion.delete({
+        where: {
+          id: pageVersion.id
+        }
+      });
+
+      return {
+        success: true,
+        message: 'Versión eliminada exitosamente'
+      };
+    } catch (error) {
+      console.error('Error deleting page version:', error);
+      return {
+        success: false,
+        message: 'Error al eliminar la versión'
+      };
+    }
+  }
 }
 
 // Exportar instancia singleton
