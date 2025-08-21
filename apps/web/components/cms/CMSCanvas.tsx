@@ -9,6 +9,7 @@ import {
   Settings,
   Move
 } from 'lucide-react';
+import ComponentBlockRenderer from './ComponentBlockRenderer';
 
 interface CMSCanvasProps {
   blocks: Block[];
@@ -167,10 +168,20 @@ export function CMSCanvas({
             </div>
           )}
 
+          {block.type === 'component' && (
+            <ComponentBlockRenderer
+              block={block}
+              isSelected={isSelected}
+              onSelect={() => onBlockSelect(block.id)}
+              onUpdate={onUpdateBlock}
+              onDelete={onDeleteBlock}
+            />
+          )}
+
           {/* Block type indicator */}
           <div className="absolute bottom-2 right-2">
             <span className="text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded">
-              {block.type}
+              {block.type === 'component' ? 'component' : block.type}
             </span>
           </div>
         </div>
@@ -190,14 +201,46 @@ export function CMSCanvas({
       </div>
       
       <div className={`${getCanvasWidth()} mx-auto p-6 space-y-6 transition-all duration-300`}>
-        {/* Add block button */}
-        <div className="text-center">
+        {/* Add block buttons */}
+        <div className="text-center space-x-4">
           <button
             onClick={() => onAddBlock('text')}
             className="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
           >
             <Plus className="w-4 h-4 mr-2" />
             Agregar Bloque
+          </button>
+          
+          <button
+            onClick={() => onAddBlock('component_clayout_header')}
+            className="inline-flex items-center px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors"
+          >
+            <Plus className="w-4 h-4 mr-2" />
+            Agregar Header
+          </button>
+          
+          <button
+            onClick={() => onAddBlock('component_cui_button')}
+            className="inline-flex items-center px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
+          >
+            <Plus className="w-4 h-4 mr-2" />
+            Agregar Botón
+          </button>
+          
+          <button
+            onClick={() => onAddBlock('component_cform_contact')}
+            className="inline-flex items-center px-4 py-2 bg-yellow-600 text-white rounded-lg hover:bg-yellow-700 transition-colors"
+          >
+            <Plus className="w-4 h-4 mr-2" />
+            Formulario
+          </button>
+          
+          <button
+            onClick={() => onAddBlock('component_cgallery_grid')}
+            className="inline-flex items-center px-4 py-2 bg-pink-600 text-white rounded-lg hover:bg-pink-700 transition-colors"
+          >
+            <Plus className="w-4 h-4 mr-2" />
+            Galería
           </button>
         </div>
 

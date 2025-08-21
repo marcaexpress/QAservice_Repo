@@ -301,6 +301,26 @@ export function CMSPanel({ block, onClose, onUpdate }: CMSPanelProps) {
               />
             </div>
             )}
+
+            {block.type === 'component' && (
+              <div className="space-y-4">
+                <div className="text-center py-4">
+                  <div className="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-3">
+                    <span className="text-2xl">🔧</span>
+                  </div>
+                  <h4 className="font-medium text-gray-900 mb-2">Bloque de Componente</h4>
+                  <p className="text-sm text-gray-600">
+                    Este bloque usa un componente reutilizable. Las propiedades se editan directamente en el bloque.
+                  </p>
+                </div>
+                
+                <div className="bg-purple-50 border border-purple-200 rounded-lg p-3">
+                  <div className="text-sm text-purple-800">
+                    <strong>Tip:</strong> Haz clic en el bloque y usa el botón de configuración (⚙️) para editar las propiedades del componente.
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
         )}
 
