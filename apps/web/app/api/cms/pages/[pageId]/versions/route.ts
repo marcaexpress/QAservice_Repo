@@ -97,7 +97,7 @@ export async function POST(
     }
 
     // Create new version
-    const result = await CMSService.createPageVersion(
+    const result = await cmsService.createPageVersion(
       pageId,
       {
         title,

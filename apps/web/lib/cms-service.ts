@@ -425,6 +425,50 @@ export class CMSService {
       };
     }
   }
+
+  /**
+   * Crea una nueva versión de una página
+   */
+  async createPageVersion(pageId: string, data: {
+    title: string;
+    description?: string;
+    blocks: any[];
+    metadata?: any;
+  }, userId: string) {
+    try {
+      // Obtener la última versión
+      const latestVersion = await prisma.pageVersion.findFirst({
+        where: { pageId },
+        orderBy: { version: 'desc' }
+      });
+
+      const newVersionNumber = (latestVersion?.version || 0) + 1;
+
+      // Crear nueva versión
+      const version = await prisma.pageVersion.create({
+        data: {
+          pageId,
+          version: newVersionNumber,
+          title: data.title,
+          description: data.description,
+          blocks: data.blocks,
+          metadata: data.metadata || {},
+          creator: userId
+        }
+      });
+
+      return {
+        success: true,
+        version
+      };
+    } catch (error) {
+      console.error('Error creating page version:', error);
+      return {
+        success: false,
+        message: 'Error al crear la versión'
+      };
+    }
+  }
 }
 
 // Exportar instancia singleton
