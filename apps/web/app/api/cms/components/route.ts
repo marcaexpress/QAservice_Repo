@@ -106,6 +106,14 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    // Verificar que organizationId esté definido
+    if (!decoded.organizationId) {
+      return NextResponse.json(
+        { error: 'ID de organización no encontrado' },
+        { status: 400 }
+      );
+    }
+
     // Crear el componente con sus propiedades
     const component = await prisma.component.create({
       data: {
