@@ -182,7 +182,8 @@ export function validateBlock(block: CMSBlock): ValidationResult {
           Object.entries(rule.itemValidation).forEach(([itemField, itemRule]) => {
             const itemValue = item[itemField];
             
-            if (itemRule.required && (itemValue === undefined || itemValue === null || itemValue === '')) {
+            const rule = itemRule as any;
+            if (rule.required && (itemValue === undefined || itemValue === null || itemValue === '')) {
               errors.push({
                 field: `${field}[${index}].${itemField}`,
                 message: `El campo ${itemField} del elemento ${index + 1} es requerido`,
@@ -191,18 +192,18 @@ export function validateBlock(block: CMSBlock): ValidationResult {
             }
 
             if (itemValue !== undefined && itemValue !== null && itemValue !== '') {
-              if (itemRule.minLength && typeof itemValue === 'string' && itemValue.length < itemRule.minLength) {
+              if (rule.minLength && typeof itemValue === 'string' && itemValue.length < rule.minLength) {
                 errors.push({
                   field: `${field}[${index}].${itemField}`,
-                  message: `El campo ${itemField} del elemento ${index + 1} debe tener al menos ${itemRule.minLength} caracteres`,
+                  message: `El campo ${itemField} del elemento ${index + 1} debe tener al menos ${rule.minLength} caracteres`,
                   code: 'MIN_LENGTH'
                 });
               }
 
-              if (itemRule.maxLength && typeof itemValue === 'string' && itemValue.length > itemRule.maxLength) {
+              if (rule.maxLength && typeof itemValue === 'string' && itemValue.length > rule.maxLength) {
                 errors.push({
                   field: `${field}[${index}].${itemField}`,
-                  message: `El campo ${itemField} del elemento ${index + 1} debe tener máximo ${itemRule.maxLength} caracteres`,
+                  message: `El campo ${itemField} del elemento ${index + 1} debe tener máximo ${rule.maxLength} caracteres`,
                   code: 'MAX_LENGTH'
                 });
               }
