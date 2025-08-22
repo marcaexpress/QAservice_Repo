@@ -35,7 +35,7 @@ export async function GET(request: NextRequest) {
         if (decoded) {
           accessControl = {
             userId: decoded.userId,
-            userRoles: [decoded.role],
+            userRoles: decoded.roles || ['user'],
             organizationId: decoded.organizationId
           };
         }

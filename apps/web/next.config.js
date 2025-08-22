@@ -18,6 +18,11 @@ const baseConfig = {
     // Habilitar características experimentales para mejor compatibilidad
     serverComponentsExternalPackages: ['@prisma/client'],
   },
+  // Configuración adicional para evitar errores de build
+  swcMinify: true,
+  compiler: {
+    removeConsole: process.env.NODE_ENV === 'production',
+  },
 };
 
 // Configuración específica para Vercel
