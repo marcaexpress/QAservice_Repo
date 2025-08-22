@@ -19,7 +19,7 @@ interface Block {
 }
 
 export function CMSLayout() {
-  const [activeTab, setActiveTab] = useState<'content' | 'theme' | 'layout' | 'access' | 'pages' | 'components'>('content');
+  const [activeTab, setActiveTab] = useState<'content' | 'theme' | 'layout' | 'access' | 'pages'>('content');
   const [selectedBlock, setSelectedBlock] = useState<string | null>(null);
   const [viewMode, setViewMode] = useState<'desktop' | 'tablet' | 'mobile'>('desktop');
   const [showAccessControl, setShowAccessControl] = useState(false);
@@ -178,8 +178,6 @@ export function CMSLayout() {
       setShowAccessControl(true);
     } else if (tab === 'pages') {
       setShowPageManager(true);
-    } else if (tab === 'components') {
-      setShowComponentManager(true);
     }
   }, []);
 
@@ -190,11 +188,7 @@ export function CMSLayout() {
     setActiveTab('content');
   }, []);
 
-  const handleComponentManagerToggle = useCallback(() => {
-    setShowComponentManager(!showComponentManager);
-    setShowPageManager(false);
-    setShowAccessControl(false);
-  }, [showComponentManager]);
+
 
   const selectedBlockData = selectedBlock ? blocks.find(b => b.id === selectedBlock) : null;
 
