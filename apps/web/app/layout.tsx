@@ -19,8 +19,7 @@ export default function RootLayout({
   return (
     <html lang="es">
       <head>
-        {/* ⬇️ Fallback: CSS precompilado (ver paso 4.3) */}
-        <link rel="stylesheet" href="/_tw.css" />
+        {/* Tailwind se importa automáticamente desde globals.css */}
       </head>
       <body className={inter.className}>
         <ConditionalLayout>
