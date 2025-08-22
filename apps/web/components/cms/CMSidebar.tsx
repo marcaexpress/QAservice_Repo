@@ -24,8 +24,8 @@ import {
 } from 'lucide-react';
 
 interface CMSidebarProps {
-  activeTab: 'content' | 'theme' | 'layout' | 'access' | 'pages' | 'components';
-  onTabChange: (tab: 'content' | 'theme' | 'layout' | 'access' | 'pages' | 'components') => void;
+  activeTab: 'content' | 'theme' | 'layout' | 'access' | 'pages';
+  onTabChange: (tab: 'content' | 'theme' | 'layout' | 'access' | 'pages') => void;
   onBlockSelect: (blockId: string) => void;
   onAddBlock: (type: string) => void;
 }
@@ -354,16 +354,7 @@ export function CMSidebar({ activeTab, onTabChange, onBlockSelect, onAddBlock }:
           </div>
         );
 
-      case 'components':
-        return (
-          <div className="space-y-4">
-            <div className="text-center py-8">
-              <Layers className="w-16 h-16 mx-auto mb-4 text-purple-100" />
-              <h3 className="text-lg font-medium text-gray-900 mb-2">Gestión de Componentes</h3>
-              <p className="text-sm text-gray-600">Crea y gestiona componentes reutilizables</p>
-            </div>
-          </div>
-        );
+
 
       default:
         return null;
@@ -393,7 +384,6 @@ export function CMSidebar({ activeTab, onTabChange, onBlockSelect, onAddBlock }:
             { id: 'content', label: 'Contenido', icon: FileText, color: 'green' },
             { id: 'theme', label: 'Tema', icon: Palette, color: 'purple' },
             { id: 'layout', label: 'Layout', icon: Layout, color: 'orange' },
-            { id: 'components', label: 'Componentes', icon: Layers, color: 'indigo' },
             { id: 'access', label: 'Acceso', icon: Shield, color: 'red' }
           ].map((tab) => {
             const isActive = activeTab === tab.id;
