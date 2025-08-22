@@ -9,7 +9,7 @@
   "scripts": {
     "build": "turbo run build",
     "build:vercel": "cd apps/web && npm run build",
-    "prebuild:vercel": "tailwindcss -c apps/web/tailwind.config.js -i apps/web/app/globals.css -o apps/web/public/_tw.css --minify",
+    "prebuild:vercel": "tailwindcss -c apps/web/tailwind.config.js -i apps/web/app/globals.css -o apps/web/public/_tw.css --minify || echo '⚠️ Tailwind prebuild falló, continuando con build...'",
     "build:strict": "turbo run build",
     "dev": "turbo run dev",
     "lint": "turbo run lint",

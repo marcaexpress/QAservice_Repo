@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "buildCommand": "npm run prebuild:vercel && cd apps/web && npm run build",
+  "buildCommand": "chmod +x build-vercel.sh && ./build-vercel.sh",
   "devCommand": "cd apps/web && npm run dev",
   "installCommand": "npm install",
   "framework": "nextjs",
