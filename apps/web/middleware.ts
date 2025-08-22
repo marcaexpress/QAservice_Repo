@@ -2,12 +2,11 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 
-// ✅ Middleware mínimo que nunca bloquea - Para despliegue inmediato
+// ⬇️ Por ahora no intercepta nada. Así descartamos que afecte a /_next/static o /_tw.css
 export function middleware(_request: NextRequest) {
   return NextResponse.next();
 }
 
-// ✅ Matcher vacío: no intercepta nada (opcional)
 export const config = {
-  matcher: [],
+  matcher: [], // ⬅️ lo dejaremos vacío mientras aseguramos estilos
 };

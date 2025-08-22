@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
-import './globals.css';
+import './globals.css'; // ⬅️ Import obligatorio
 import { ConditionalLayout } from '@/components/layout/ConditionalLayout';
 
 const inter = Inter({ subsets: ['latin'] });
@@ -18,6 +18,10 @@ export default function RootLayout({
 }) {
   return (
     <html lang="es">
+      <head>
+        {/* ⬇️ Fallback: CSS precompilado (ver paso 4.3) */}
+        <link rel="stylesheet" href="/_tw.css" />
+      </head>
       <body className={inter.className}>
         <ConditionalLayout>
           {children}
