@@ -1,7 +1,7 @@
 // ===== CMS VALIDATION SYSTEM =====
 // Sistema de validación para bloques del CMS
 
-import { CMSBlock, BlockType, CMSBlockContent } from '../components/cms/types';
+import { CMSBlock, BlockType, CMSBlockContent, CMSPage } from '../components/cms/types';
 
 export interface ValidationError {
   field: string;
