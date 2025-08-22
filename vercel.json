@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "buildCommand": "cd apps/web && npm run build",
+  "buildCommand": "chmod +x build-vercel.sh && ./build-vercel.sh",
   "devCommand": "cd apps/web && npm run dev",
   "installCommand": "npm install",
   "framework": "nextjs",
@@ -12,7 +12,10 @@
     "env": {
       "NODE_ENV": "production",
       "SKIP_TYPE_CHECK": "true",
-      "SKIP_LINT": "true"
+      "SKIP_LINT": "true",
+      "NPM_CONFIG_AUDIT": "false",
+      "NPM_CONFIG_FUND": "false",
+      "NPM_CONFIG_LOGLEVEL": "error"
     }
   },
 
