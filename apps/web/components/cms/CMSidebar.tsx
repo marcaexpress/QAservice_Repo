@@ -244,7 +244,7 @@ export function CMSidebar({ activeTab, onTabChange, onBlockSelect, onAddBlock }:
             
             {expandedCategories.includes(category) && (
               <div className="ml-4 space-y-2">
-                {categoryBlocks.map((block) => (
+                {(categoryBlocks as any[]).map((block) => (
                   <div
                     key={block.id}
                     className="group relative p-3 bg-white rounded-lg border border-gray-200 hover:border-blue-300 hover:shadow-sm cursor-pointer transition-all"
