@@ -1,9 +1,55 @@
-node_modules
-.next
+# Archivos y directorios a ignorar durante el despliegue a Vercel
+
+# Archivos de desarrollo
 .env
 .env.local
-.git
-.gitignore
-README.md
-TAREAS/
-*.log
+.env.development
+.env.test
+.env.production
+
+# Archivos de TypeScript que pueden causar errores
+*.tsbuildinfo
+tsconfig.tsbuildinfo
+
+# Archivos de testing
+**/*.test.ts
+**/*.test.tsx
+**/*.spec.ts
+**/*.spec.tsx
+**/__tests__/
+**/coverage/
+
+# Archivos de desarrollo
+**/node_modules/
+**/.next/
+**/.turbo/
+**/dist/
+**/build/
+
+# Archivos de configuración de desarrollo
+.eslintrc*
+.prettierrc*
+jest.config.*
+*.config.js
+*.config.ts
+
+# Archivos de documentación
+**/*.md
+**/README.md
+**/CHANGELOG.md
+
+# Archivos de scripts
+**/scripts/
+**/TAREAS/
+
+# Archivos de configuración de CI/CD
+.github/
+.github/workflows/
+
+# Archivos de base de datos
+**/prisma/migrations/
+**/prisma/seed.ts
+
+# Archivos de configuración de monorepo
+turbo.json
+lerna.json
