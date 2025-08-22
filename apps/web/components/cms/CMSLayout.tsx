@@ -165,7 +165,7 @@ export function CMSLayout() {
     }
   }, [currentPage, blocks]);
 
-  const handleTabChange = useCallback((tab: 'content' | 'theme' | 'layout' | 'access' | 'pages' | 'components') => {
+  const handleTabChange = useCallback((tab: 'content' | 'theme' | 'layout' | 'access' | 'pages') => {
     setActiveTab(tab);
     
     // Reset all panels
