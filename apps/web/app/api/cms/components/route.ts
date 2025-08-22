@@ -1,3 +1,6 @@
+// 🟩 Forzar entorno Node.js para evitar Edge Runtime
+export const runtime = "nodejs";
+
 import { NextRequest, NextResponse } from 'next/server';
 import { verifyToken } from '@/lib/jwt';
 import { PrismaClient } from '@prisma/client';

@@ -5,10 +5,12 @@ const nextConfig = {
     domains: ['localhost'],
   },
   typescript: {
-    ignoreBuildErrors: true, // ⚠️ Ignora errores TS en build
+    // 🟩 Permite que el build termine aunque haya errores de tipos
+    ignoreBuildErrors: true,
   },
   eslint: {
-    ignoreDuringBuilds: true, // ⚠️ Ignora ESLint en build
+    // 🟩 No falla el build por linting
+    ignoreDuringBuilds: true,
   },
   experimental: {
     serverComponentsExternalPackages: ['@prisma/client'],
