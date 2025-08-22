@@ -648,9 +648,6 @@ export default function ComponentBlockRenderer({
                   {property.required && <span className="text-red-500 ml-1">*</span>}
                 </label>
                 {renderPropertyEditor(property)}
-                {property.description && (
-                  <p className="text-xs text-gray-500">{property.description}</p>
-                )}
               </div>
             ))}
           </div>
