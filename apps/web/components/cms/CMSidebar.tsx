@@ -226,7 +226,7 @@ export function CMSidebar({ activeTab, onTabChange, onBlockSelect, onAddBlock }:
       }
       acc[block.category].push(block);
       return acc;
-    }, {} as Record<string, typeof contentBlocks>);
+    }, {} as Record<string, typeof allBlocks>);
 
     return (
       <div className="space-y-4">
