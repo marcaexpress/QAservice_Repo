@@ -384,7 +384,7 @@ export class CMSService {
         data: {
           title: pageVersion.title,
           description: pageVersion.description,
-          blocks: pageVersion.blocks,
+          blocks: pageVersion.blocks as any,
           updatedBy: userId,
           updatedAt: new Date()
         }
@@ -451,7 +451,7 @@ export class CMSService {
           version: newVersionNumber,
           title: data.title,
           description: data.description,
-          blocks: data.blocks,
+          blocks: data.blocks as any,
           metadata: data.metadata || {},
           creator: userId
         }
