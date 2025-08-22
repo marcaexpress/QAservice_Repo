@@ -2,7 +2,8 @@
 
 import { useEffect, useState } from 'react';
 import { useParams } from 'next/navigation';
-import { CMSService, PageAccessControl } from '@/lib/cms-service';
+import { CMSService } from '@/lib/cms-service';
+import { PageAccessControl } from '@/components/cms/types';
 
 interface Block {
   id: string;
