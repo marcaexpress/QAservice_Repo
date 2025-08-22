@@ -105,28 +105,32 @@ const themeOptions = [
     name: 'Paleta de Colores',
     category: 'Apariencia',
     icon: Palette,
-    description: 'Colores principales y secundarios'
+    description: 'Colores principales y secundarios',
+    type: 'theme'
   },
   {
     id: 'typography',
     name: 'Tipografía',
     category: 'Texto',
     icon: Type,
-    description: 'Fuentes y estilos de texto'
+    description: 'Fuentes y estilos de texto',
+    type: 'theme'
   },
   {
     id: 'spacing',
     name: 'Espaciado',
     category: 'Layout',
     icon: Grid3X3,
-    description: 'Márgenes y padding'
+    description: 'Márgenes y padding',
+    type: 'theme'
   },
   {
     id: 'shadows',
     name: 'Sombras',
     category: 'Efectos',
     icon: Sparkles,
-    description: 'Sombras y profundidad'
+    description: 'Sombras y profundidad',
+    type: 'theme'
   }
 ];
 
@@ -137,21 +141,24 @@ const layoutOptions = [
     name: 'Contenedor',
     category: 'Estructura',
     icon: Layers,
-    description: 'Ancho y centrado del contenido'
+    description: 'Ancho y centrado del contenido',
+    type: 'layout'
   },
   {
     id: 'grid',
     name: 'Sistema de Grid',
     category: 'Estructura',
     icon: Grid3X3,
-    description: 'Columnas y filas'
+    description: 'Columnas y filas',
+    type: 'layout'
   },
   {
     id: 'responsive',
     name: 'Responsive',
     category: 'Adaptación',
     icon: Eye,
-    description: 'Comportamiento en móvil'
+    description: 'Comportamiento en móvil',
+    type: 'layout'
   }
 ];
 
