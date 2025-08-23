@@ -1,6 +1,6 @@
+import './globals.css';
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
-import './globals.css'; // ⬅️ Import obligatorio
 import { ConditionalLayout } from '@/components/layout/ConditionalLayout';
 
 const inter = Inter({ subsets: ['latin'] });
@@ -11,6 +11,8 @@ export const metadata: Metadata = {
   keywords: 'QA testing, software testing, consultoría, aprendizaje, CMS',
 };
 
+const stylesHref = process.env.NEXT_PUBLIC_STYLES_CDN || '/_tw.css';
+
 export default function RootLayout({
   children,
 }: {
@@ -19,10 +21,8 @@ export default function RootLayout({
   return (
     <html lang="es">
       <head>
-        {/* 🚨 CSS CRÍTICO EXTERNO - GARANTIZA ESTILOS */}
-        <link rel="stylesheet" href="/critical-styles.css" />
-        
-        {/* Tailwind se importa automáticamente desde globals.css */}
+        {/* CSS del Design System desde CDN (aislado) o fallback local */}
+        <link rel="stylesheet" href={stylesHref} />
       </head>
       <body className={inter.className}>
         <ConditionalLayout>

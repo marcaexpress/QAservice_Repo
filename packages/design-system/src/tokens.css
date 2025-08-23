@@ -1,0 +1,13 @@
+/* Variables CSS que actúan como "styling hooks" */
+:root {
+  --color-brand: 59 130 246;      /* #3b82f6 */
+  --color-brand-50: 239 246 255;
+  --color-brand-100: 219 234 254;
+  --color-brand-500: 59 130 246;
+  --color-brand-700: 29 78 216;
+}
+
+/* Tema oscuro opcional */
+.theme-dark {
+  --color-brand: 147 197 253;     /* un azul más claro en dark */
+} 
