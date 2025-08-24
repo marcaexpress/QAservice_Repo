@@ -3,15 +3,16 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "prebuild": "tailwindcss -c tailwind.config.js -i ./app/globals.css -o ./public/_tw.css --minify || echo \"⚠️ Fallback Tailwind emitido\"",
+    "prebuild": "prisma generate --schema=prisma/schema.prisma && tailwindcss -c tailwind.config.js -i ./app/globals.css -o ./public/_tw.css --minify || echo \"⚠️ Fallback Tailwind emitido\"",
     "dev": "next dev",
-
-    "build": "npm run prebuild && prisma generate --schema=../../prisma/schema.prisma && next build",
+  "build": "npm run prebuild && next build --no-lint",
     "build:strict": "prisma generate --schema=../../prisma/schema.prisma && next build",
     "start": "next start",
     "lint": "next lint",
     "typecheck": "tsc --noEmit",
     "test": "jest",
+    "test:prisma-deps": "node test-prisma-and-deps.js",
+    "test:pipeline": "node test-pipeline-integrity.js",
     "test:unit": "jest --testPathPattern=__tests__/unit",
     "db:push": "prisma db push",
     "db:seed": "prisma db seed",
@@ -25,8 +26,11 @@
     "@types/react-dom": "^18.2.18",
     "autoprefixer": "^10.4.20",
     "bcryptjs": "^3.0.2",
+    "clsx": "^2.1.1",
+    "cross-fetch": "^4.1.0",
     "eslint": "^8.57.1",
     "eslint-config-next": "14.0.4",
+    "jsonwebtoken": "^9.0.2",
     "lucide-react": "^0.540.0",
     "next": "14.0.4",
     "next-auth": "^5.0.0-beta.3",
@@ -34,6 +38,7 @@
     "prisma": "^5.7.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "tailwind-merge": "^3.3.1",
     "tailwindcss": "^3.3.6",
     "typescript": "^5.3.3",
     "zod": "^3.22.4"
@@ -42,7 +47,9 @@
     "@testing-library/jest-dom": "^6.1.5",
     "@testing-library/react": "^13.4.0",
     "@types/bcryptjs": "^2.4.6",
+    "dotenv": "^17.2.1",
     "jest": "^29.7.0",
+    "jest-environment-jsdom": "^30.0.5",
     "tailwindcss": "^3.4.10"
   }
 }

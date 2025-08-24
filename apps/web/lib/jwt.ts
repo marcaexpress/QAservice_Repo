@@ -1,8 +1,8 @@
 import jwt from 'jsonwebtoken';
 import { NextRequest, NextResponse } from 'next/server';
 
-// Hardcodear JWT_SECRET para evitar conflictos con variables de entorno
-const JWT_SECRET = 'qa-services-jwt-secret-key-2024-dev-environment';
+// Usar JWT_SECRET de variable de entorno en producción, fallback a desarrollo
+const JWT_SECRET = process.env.JWT_SECRET || 'qa-services-jwt-secret-key-2024-dev-environment';
 const JWT_EXPIRES_IN = '7d'; // 7 días
 
 // Debug: Mostrar JWT_SECRET completo para verificar

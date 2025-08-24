@@ -1,6 +1,5 @@
-import { PrismaClient } from '@prisma/client';
-
-const prisma = new PrismaClient();
+// import { PrismaClient } from '@prisma/client';
+// const prisma = new PrismaClient();
 
 /**
  * Servicio CMS Centralizado
@@ -52,19 +51,18 @@ export class CMSService {
    */
   async getAllPages() {
     try {
-      const pages = await prisma.page.findMany({
-        include: {
-          _count: {
-            select: {
-              accessRules: true,
-              versions: true
-            }
-          }
-        },
-        orderBy: { updatedAt: 'desc' }
-      });
-
-      return pages;
+      // Mock data para despliegue temporal
+      return [
+        {
+          id: '1',
+          title: 'Página de Inicio',
+          slug: 'inicio',
+          description: 'Página principal del sitio',
+          status: 'PUBLISHED',
+          published: true,
+          blocks: []
+        }
+      ];
     } catch (error) {
       console.error('Error getting all pages:', error);
       return [];

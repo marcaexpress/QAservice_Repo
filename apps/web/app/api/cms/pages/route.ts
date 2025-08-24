@@ -3,7 +3,7 @@ export const runtime = "nodejs";
 
 import { NextRequest, NextResponse } from 'next/server';
 import { verifyToken } from '@/lib/jwt';
-import { cmsService } from '@/lib/cms-service';
+import { simpleCmsService as cmsService } from '@/lib/simple-cms';
 
 export async function GET(request: NextRequest) {
   try {

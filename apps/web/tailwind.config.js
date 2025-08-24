@@ -6,11 +6,10 @@ module.exports = {
     './components/**/*.{js,ts,jsx,tsx,mdx}',
     './lib/**/*.{js,ts,jsx,tsx,mdx}',
     
-    // ⬇️ Rutas absolutas para monorepo
-    '**/components/**/*.{js,ts,jsx,tsx,mdx}',
-    '**/app/**/*.{js,ts,jsx,tsx,mdx}',
-    '**/sections/**/*.{js,ts,jsx,tsx,mdx}',
-    '**/ui/**/*.{js,ts,jsx,tsx,mdx}',
+    // ⬇️ Rutas específicas para monorepo
+    './components/**/*.{js,ts,jsx,tsx,mdx}',
+    './sections/**/*.{js,ts,jsx,tsx,mdx}',
+    './ui/**/*.{js,ts,jsx,tsx,mdx}',
   ],
   safelist: [
     // Colores personalizados

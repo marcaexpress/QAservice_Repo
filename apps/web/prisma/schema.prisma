@@ -1,0 +1,230 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id             String           @id @default(cuid())
+  email          String           @unique
+  password       String?
+  name           String?
+  emailVerified  DateTime?
+  image          String?
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
+  organizationId String?
+  roles          RoleAssignment[]
+  organization   Organization?    @relation(fields: [organizationId], references: [id])
+  
+  // CMS Relations
+  pageAccessRules PageAccessRule[]
+
+  @@map("users")
+}
+
+model Organization {
+  id          String   @id @default(cuid())
+  name        String
+  description String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  // Relaciones
+  users       User[]
+  roles       Role[]
+  pages       Page[]
+  components  Component[]
+  pageAccessRules PageAccessRule[] // Nueva relación
+}
+
+model Role {
+  id             String           @id @default(cuid())
+  name           String
+  description    String?
+  organizationId String?
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
+  users          RoleAssignment[]
+  permissions    RolePermission[]
+  organization   Organization?    @relation(fields: [organizationId], references: [id])
+  
+  // CMS Relations
+  pageAccessRules PageAccessRule[]
+
+  @@map("roles")
+}
+
+model Permission {
+  id        String           @id @default(cuid())
+  action    String
+  resource  String
+  createdAt DateTime         @default(now())
+  updatedAt DateTime         @updatedAt
+  roles     RolePermission[]
+
+  @@unique([action, resource])
+  @@map("permissions")
+}
+
+model RolePermission {
+  id           String     @id @default(cuid())
+  roleId       String
+  permissionId String
+  createdAt    DateTime   @default(now())
+  permission   Permission @relation(fields: [permissionId], references: [id], onDelete: Cascade)
+  role         Role       @relation(fields: [roleId], references: [id], onDelete: Cascade)
+
+  @@unique([roleId, permissionId])
+  @@map("role_permissions")
+}
+
+model RoleAssignment {
+  id        String   @id @default(cuid())
+  userId    String
+  roleId    String
+  createdAt DateTime @default(now())
+  role      Role     @relation(fields: [roleId], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, roleId])
+  @@map("role_assignments")
+}
+
+// ===== CMS TABLES =====
+
+model Page {
+  id          String   @id @default(cuid())
+  title       String
+  slug        String   @unique
+  description String?
+  status      String   @default("DRAFT") // DRAFT, REVIEW, PUBLISHED, ARCHIVED
+  published   Boolean  @default(false)
+  publishedAt DateTime?
+  blocks      Json?    // Contenido de la página
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  // Relaciones
+  createdBy   String
+  updatedBy   String
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id])
+  accessRules PageAccessRule[]
+  versions    PageVersion[]
+  componentInstances ComponentInstance[] // Nueva relación
+}
+
+model PageVersion {
+  id          String   @id @default(cuid())
+  pageId      String
+  version     Int
+  title       String
+  description String?
+  blocks      Json
+  metadata    Json?
+  createdAt   DateTime @default(now())
+  creator     String?
+  
+  // Relations
+  page        Page     @relation(fields: [pageId], references: [id], onDelete: Cascade)
+  
+  @@unique([pageId, version])
+  @@map("page_versions")
+}
+
+model PageAccessRule {
+  id             String   @id @default(cuid())
+  pageId         String
+  page           Page     @relation(fields: [pageId], references: [id], onDelete: Cascade)
+  
+  accessType     String   // PUBLIC, PRIVATE, ROLE_BASED, USER_SPECIFIC, ORGANIZATION
+  permissions    String[] // VIEW, EDIT, PUBLISH, DELETE
+  
+  // Relaciones opcionales según el tipo de acceso
+  roleId         String?
+  role           Role?    @relation(fields: [roleId], references: [id], onDelete: SetNull)
+  userId         String?
+  user           User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+  organizationId String?
+  organization   Organization? @relation(fields: [organizationId], references: [id], onDelete: SetNull)
+  
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+  
+  @@map("page_access_rules")
+}
+
+// ===== COMPONENTES CMS =====
+model Component {
+  id          String   @id @default(cuid())
+  name        String   @unique // "layout_header", "layout_block", "ui_button"
+  type        String   // "layout", "block", "ui", "form"
+  category    String   // "navigation", "content", "interaction"
+  description String?
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  // Relaciones
+  properties  ComponentProperty[]
+  instances   ComponentInstance[]
+  versions    ComponentVersion[]
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id])
+}
+
+model ComponentProperty {
+  id          String   @id @default(cuid())
+  componentId String
+  component   Component @relation(fields: [componentId], references: [id], onDelete: Cascade)
+  
+  name        String   // "text", "color", "size", "href"
+  type        String   // "string", "number", "boolean", "color", "select"
+  value       String?  // valor por defecto
+  required    Boolean  @default(false)
+  options     String[] // para tipos "select"
+  order       Int      @default(0)
+  
+  // Validaciones
+  minLength   Int?
+  maxLength   Int?
+  minValue    Float?
+  maxValue    Float?
+  
+  createdAt   DateTime @default(now())
+}
+
+model ComponentInstance {
+  id          String   @id @default(cuid())
+  componentId String
+  component   Component @relation(fields: [componentId], references: [id])
+  
+  pageId      String?
+  page        Page?    @relation(fields: [pageId], references: [id], onDelete: Cascade)
+  
+  // Datos específicos de esta instancia
+  data        Json     // { "text": "Mi Botón", "color": "#007bff", "href": "/contacto" }
+  order       Int      @default(0)
+  parentId    String?  // para anidamiento (ej: botón dentro de un bloque)
+  parent      ComponentInstance? @relation("Nesting", fields: [parentId], references: [id])
+  children    ComponentInstance[] @relation("Nesting")
+  
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model ComponentVersion {
+  id          String   @id @default(cuid())
+  componentId String
+  component   Component @relation(fields: [componentId], references: [id])
+  
+  version     String   // "1.0.0", "2.1.3"
+  changes     String   // descripción de cambios
+  isActive    Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  createdBy   String
+}
