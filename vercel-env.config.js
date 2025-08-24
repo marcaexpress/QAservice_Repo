@@ -4,38 +4,25 @@
  */
 
 module.exports = {
-  // Configuración para ignorar errores de TypeScript
+  // No ignorar errores críticos en producción
   typescript: {
-    ignoreBuildErrors: true,
+    ignoreBuildErrors: false,
   },
-  
-  // Configuración para ignorar errores de ESLint
   eslint: {
-    ignoreDuringBuilds: true,
+    ignoreDuringBuilds: false,
   },
-  
-  // Configuración experimental
   experimental: {
     serverComponentsExternalPackages: ['@prisma/client'],
   },
-  
-  // Configuración de transpilación
   transpilePackages: ['@qa-services/ui', '@qa-services/cms-core', '@qa-services/config'],
-  
-  // Configuración de imágenes
   images: {
     domains: ['localhost'],
   },
-  
-  // Configuración de webpack para ignorar errores
   webpack: (config, { isServer }) => {
-    // Ignorar errores de TypeScript en webpack
+    // Solo ignorar warnings menores
     config.ignoreWarnings = [
-      /Failed to parse source map/,
-      /Module not found/,
-      /Can't resolve/,
+      /Failed to parse source map/
     ];
-    
     return config;
   },
 };

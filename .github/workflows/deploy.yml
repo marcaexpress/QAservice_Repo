@@ -53,6 +53,11 @@ jobs:
       uses: amondnet/vercel-action@v25
       with:
         vercel-token: ${{ secrets.VERCEL_TOKEN }}
-        vercel-org-id: ${{ secrets.ORG_ID }}
-        vercel-project-id: ${{ secrets.PROJECT_ID }}
+        vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
+        vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
         working-directory: ./apps/web
+
+    - name: Healthcheck post-deploy
+      run: |
+        sleep 20
+        curl -f https://qa-services-d849kxe3s-marcaexpress-projects.vercel.app/api/health || (echo "❌ Healthcheck fallido" && exit 1)

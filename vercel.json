@@ -1,24 +1,16 @@
 {
   "version": 2,
-  "buildCommand": "chmod +x build-vercel.sh && ./build-vercel.sh",
-  "devCommand": "cd apps/web && npm run dev",
+  "buildCommand": "npm run build",
+  "devCommand": "npm run dev",
   "installCommand": "npm install",
   "framework": "nextjs",
-  "outputDirectory": "apps/web/.next",
-  "env": {
-    "NODE_ENV": "production"
-  },
+  "outputDirectory": ".next",
+  "env": {},
   "build": {
     "env": {
-      "NODE_ENV": "production",
-      "SKIP_TYPE_CHECK": "true",
-      "SKIP_LINT": "true",
-      "NPM_CONFIG_AUDIT": "false",
-      "NPM_CONFIG_FUND": "false",
-      "NPM_CONFIG_LOGLEVEL": "error"
+      "NODE_ENV": "production"
     }
   },
-
   "routes": [
     {
       "src": "/admin/(.*)",
@@ -28,6 +20,5 @@
       "src": "/api/(.*)",
       "dest": "/api/$1"
     }
-  ],
-  "ignoreCommand": "echo 'Skipping TypeScript errors for deployment'"
+  ]
 }
