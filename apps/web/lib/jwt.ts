@@ -33,14 +33,23 @@ export function generateToken(payload: JWTPayload): string {
 
 export function verifyToken(token: string): JWTPayload | null {
   try {
+    // Detectar si el token es de Vercel (audience contiene "vercel")
+    if (token && token.startsWith('eyJ')) {
+      const decoded = jwt.decode(token, { complete: true });
+      if (decoded && typeof decoded === 'object' && decoded['payload'] && decoded['payload']['aud'] && String(decoded['payload']['aud']).includes('vercel')) {
+        // Token de Vercel: no verificar la firma, rechazar para lógica propia
+        console.log('❌ [VERIFY] Token de Vercel detectado, no se verifica con JWT_SECRET');
+        return null;
+      }
+    }
+    // Verificar con nuestra clave solo si no es de Vercel
     console.log('🔑 [VERIFY] Verificando token:', token.substring(0, 50) + '...');
     console.log('🔑 [VERIFY] Usando JWT_SECRET:', JWT_SECRET);
     console.log('🔑 [VERIFY] JWT_SECRET longitud:', JWT_SECRET.length);
-    
-    const decoded = jwt.verify(token, JWT_SECRET) as JWTPayload;
+    const verified = jwt.verify(token, JWT_SECRET) as JWTPayload;
     console.log('✅ [VERIFY] Token verificado exitosamente');
-    console.log('📋 [VERIFY] Payload:', JSON.stringify(decoded, null, 2));
-    return decoded;
+    console.log('📋 [VERIFY] Payload:', JSON.stringify(verified, null, 2));
+    return verified;
   } catch (error) {
     console.log('❌ [VERIFY] Error verificando token:', error);
     console.log('❌ [VERIFY] Tipo de error:', typeof error);
