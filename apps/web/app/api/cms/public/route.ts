@@ -1,3 +1,7 @@
+// [DEPLOY-FIX] Asegurar que esta route es dinámica y no se intenta prerender
+export const dynamic = 'force-dynamic';
+export const revalidate = 0; // no cache en build
+
 // 🟩 Forzar entorno Node.js para evitar Edge Runtime
 export const runtime = "nodejs";
 
@@ -45,7 +49,9 @@ export async function GET(request: NextRequest) {
       }
     } catch (error) {
       // Continue as anonymous user if token verification fails
-      console.log('Token verification failed, continuing as anonymous user');
+      if (process.env.NODE_ENV !== 'production') {
+        console.log('Token verification failed, continuing as anonymous user');
+      }
     }
 
     // Get page using cmsService

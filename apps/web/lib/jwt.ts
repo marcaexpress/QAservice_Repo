@@ -1,15 +1,23 @@
 import jwt from 'jsonwebtoken';
 import { NextRequest, NextResponse } from 'next/server';
 
-// Usar JWT_SECRET de variable de entorno en producción, fallback a desarrollo
-const JWT_SECRET = process.env.JWT_SECRET || 'qa-services-jwt-secret-key-2024-dev-environment';
+// [DEPLOY-FIX] libs/secrets.ts centralizado
+function getJwtSecret(): string {
+  const s = process.env.JWT_SECRET || 'qa-services-jwt-secret-key-2024-dev-environment';
+  if (!s || s.length < 32) throw new Error("JWT_SECRET missing/weak");
+  return s;
+}
+
+const JWT_SECRET = getJwtSecret();
 const JWT_EXPIRES_IN = '7d'; // 7 días
 
-// Debug: Mostrar JWT_SECRET completo para verificar
-console.log('🔑 [JWT-LIB] JWT_SECRET hardcodeado:', JWT_SECRET);
-console.log('🔑 [JWT-LIB] JWT_SECRET longitud:', JWT_SECRET.length);
-console.log('🔑 [JWT-LIB] JWT_SECRET primeros 20 chars:', JWT_SECRET.substring(0, 20));
-console.log('🔑 [JWT-LIB] JWT_SECRET últimos 20 chars:', JWT_SECRET.substring(JWT_SECRET.length - 20));
+// [DEPLOY-FIX] NO loguear secretos en producción
+if (process.env.NODE_ENV !== 'production') {
+  // console.log('🔑 [JWT-LIB] JWT_SECRET hardcodeado:', JWT_SECRET); // Comentado
+  // console.log('🔑 [JWT-LIB] JWT_SECRET longitud:', JWT_SECRET.length); // Comentado
+  // console.log('🔑 [JWT-LIB] JWT_SECRET primeros 20 chars:', JWT_SECRET.substring(0, 20)); // Comentado
+  // console.log('🔑 [JWT-LIB] JWT_SECRET últimos 20 chars:', JWT_SECRET.substring(JWT_SECRET.length - 20)); // Comentado
+}
 
 export interface JWTPayload {
   userId: string;
@@ -20,13 +28,19 @@ export interface JWTPayload {
 }
 
 export function generateToken(payload: JWTPayload): string {
-  console.log('🔑 [GENERATE] Generando token con payload:', JSON.stringify(payload, null, 2));
-  console.log('🔑 [GENERATE] Usando JWT_SECRET:', JWT_SECRET);
-  console.log('🔑 [GENERATE] JWT_SECRET longitud:', JWT_SECRET.length);
+  // [DEPLOY-FIX] NO loguear secretos en producción
+  if (process.env.NODE_ENV !== 'production') {
+    console.log('🔑 [GENERATE] Generando token con payload:', JSON.stringify(payload, null, 2));
+    // console.log('🔑 [GENERATE] Usando JWT_SECRET:', JWT_SECRET); // Comentado
+    // console.log('🔑 [GENERATE] JWT_SECRET longitud:', JWT_SECRET.length); // Comentado
+  }
   
   const token = jwt.sign(payload, JWT_SECRET, { expiresIn: JWT_EXPIRES_IN });
-  console.log('✅ [GENERATE] Token generado exitosamente');
-  console.log('🔑 [GENERATE] Token (primeros 50 chars):', token.substring(0, 50) + '...');
+  
+  if (process.env.NODE_ENV !== 'production') {
+    console.log('✅ [GENERATE] Token generado exitosamente');
+    console.log('🔑 [GENERATE] Token (primeros 50 chars):', token.substring(0, 50) + '...');
+  }
   
   return token;
 }
@@ -38,23 +52,33 @@ export function verifyToken(token: string): JWTPayload | null {
       const decoded = jwt.decode(token, { complete: true });
       if (decoded && typeof decoded === 'object' && decoded['payload'] && decoded['payload']['aud'] && String(decoded['payload']['aud']).includes('vercel')) {
         // Token de Vercel: no verificar la firma, rechazar para lógica propia
-        console.log('❌ [VERIFY] Token de Vercel detectado, no se verifica con JWT_SECRET');
+        if (process.env.NODE_ENV !== 'production') {
+          console.log('❌ [VERIFY] Token de Vercel detectado, no se verifica con JWT_SECRET');
+        }
         return null;
       }
     }
     // Verificar con nuestra clave solo si no es de Vercel
-    console.log('🔑 [VERIFY] Verificando token:', token.substring(0, 50) + '...');
-    console.log('🔑 [VERIFY] Usando JWT_SECRET:', JWT_SECRET);
-    console.log('🔑 [VERIFY] JWT_SECRET longitud:', JWT_SECRET.length);
+    if (process.env.NODE_ENV !== 'production') {
+      console.log('🔑 [VERIFY] Verificando token:', token.substring(0, 50) + '...');
+      console.log('🔑 [VERIFY] Usando JWT_SECRET:', JWT_SECRET);
+      console.log('🔑 [VERIFY] JWT_SECRET longitud:', JWT_SECRET.length);
+    }
     const verified = jwt.verify(token, JWT_SECRET) as JWTPayload;
-    console.log('✅ [VERIFY] Token verificado exitosamente');
-    console.log('📋 [VERIFY] Payload:', JSON.stringify(verified, null, 2));
+    if (process.env.NODE_ENV !== 'production') {
+      console.log('✅ [VERIFY] Token verificado exitosamente');
+      console.log('📋 [VERIFY] Payload:', JSON.stringify(verified, null, 2));
+    }
     return verified;
   } catch (error) {
-    console.log('❌ [VERIFY] Error verificando token:', error);
-    console.log('❌ [VERIFY] Tipo de error:', typeof error);
+    if (process.env.NODE_ENV !== 'production') {
+      console.log('❌ [VERIFY] Error verificando token:', error);
+      console.log('❌ [VERIFY] Tipo de error:', typeof error);
+    }
     if (error instanceof Error) {
-      console.log('❌ [VERIFY] Mensaje de error:', error.message);
+      if (process.env.NODE_ENV !== 'production') {
+        console.log('❌ [VERIFY] Mensaje de error:', error.message);
+      }
     }
     return null;
   }

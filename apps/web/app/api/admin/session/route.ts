@@ -1,15 +1,25 @@
+// [DEPLOY-FIX] Asegurar que esta route es dinámica y no se intenta prerender
+export const dynamic = 'force-dynamic';
+export const revalidate = 0; // no cache en build
+
 import { NextRequest, NextResponse } from 'next/server';
 import { getTokenFromRequest, verifyToken } from '@/lib/jwt';
 
 export async function GET(request: NextRequest) {
   try {
-    console.log('🔍 [ADMIN] Verificando sesión admin...');
+    if (process.env.NODE_ENV !== 'production') {
+      console.log('🔍 [ADMIN] Verificando sesión admin...');
+    }
     
     const token = getTokenFromRequest(request);
-    console.log('🔑 [ADMIN] Token encontrado:', token ? 'SÍ' : 'NO');
+    if (process.env.NODE_ENV !== 'production') {
+      console.log('🔑 [ADMIN] Token encontrado:', token ? 'SÍ' : 'NO');
+    }
     
     if (!token) {
-      console.log('❌ [ADMIN] No se encontró token');
+      if (process.env.NODE_ENV !== 'production') {
+        console.log('❌ [ADMIN] No se encontró token');
+      }
       return NextResponse.json(
         { isAuthenticated: false, user: null },
         { status: 401 }
@@ -17,10 +27,14 @@ export async function GET(request: NextRequest) {
     }
 
     const payload = verifyToken(token);
-    console.log('🔐 [ADMIN] Payload verificado:', payload ? 'SÍ' : 'NO');
+    if (process.env.NODE_ENV !== 'production') {
+      console.log('🔐 [ADMIN] Payload verificado:', payload ? 'SÍ' : 'NO');
+    }
     
     if (!payload) {
-      console.log('❌ [ADMIN] Token inválido o expirado');
+      if (process.env.NODE_ENV !== 'production') {
+        console.log('❌ [ADMIN] Token inválido o expirado');
+      }
       return NextResponse.json(
         { isAuthenticated: false, user: null },
         { status: 401 }
@@ -34,14 +48,18 @@ export async function GET(request: NextRequest) {
     );
 
     if (!hasAdminAccess) {
-      console.log('❌ [ADMIN] Usuario sin permisos de administrador');
+      if (process.env.NODE_ENV !== 'production') {
+        console.log('❌ [ADMIN] Usuario sin permisos de administrador');
+      }
       return NextResponse.json(
         { isAuthenticated: false, user: null, error: 'no-permissions' },
         { status: 403 }
       );
     }
 
-    console.log('✅ [ADMIN] Token válido, admin autenticado');
+    if (process.env.NODE_ENV !== 'production') {
+      console.log('✅ [ADMIN] Token válido, admin autenticado');
+    }
     return NextResponse.json({
       isAuthenticated: true,
       user: {
@@ -54,7 +72,9 @@ export async function GET(request: NextRequest) {
     });
 
   } catch (error) {
-    console.error('💥 [ADMIN] Error verificando sesión:', error);
+    if (process.env.NODE_ENV !== 'production') {
+      console.error('💥 [ADMIN] Error verificando sesión:', error);
+    }
     return NextResponse.json(
       { isAuthenticated: false, user: null },
       { status: 500 }

@@ -5,9 +5,11 @@ const nextConfig = {
   },
   swcMinify: false,
   eslint: { ignoreDuringBuilds: true },
-  experimental: { externalDir: true },
-  output: 'standalone',
-  trailingSlash: true,
+  experimental: { 
+    externalDir: true,
+    serverComponentsExternalPackages: ['@prisma/client']
+  },
+  trailingSlash: false,
   images: {
     unoptimized: true,
   },
