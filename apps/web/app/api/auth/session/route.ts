@@ -8,9 +8,13 @@ export async function GET(request: NextRequest) {
     
     const token = getTokenFromRequest(request);
     console.log('🔑 Token encontrado:', token ? 'SÍ' : 'NO');
-    
-    if (!token) {
-      console.log('❌ No se encontró token');
+
+    // Solo validar el token si viene de auth-token (no _vercel_jwt)
+    const cookieHeader = request.headers.get('cookie') || '';
+    const isAuthToken = cookieHeader.includes('auth-token=');
+
+    if (!token || !isAuthToken) {
+      console.log('❌ No se encontró token propio o el token es de Vercel');
       return NextResponse.json(
         { isAuthenticated: false, user: null },
         { status: 401 }
@@ -19,7 +23,7 @@ export async function GET(request: NextRequest) {
 
     const payload = verifyToken(token);
     console.log('🔐 Payload verificado:', payload ? 'SÍ' : 'NO');
-    
+
     if (!payload) {
       console.log('❌ Token inválido o expirado');
       return NextResponse.json(
