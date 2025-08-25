@@ -79,7 +79,7 @@ export function getTokenFromRequest(request: NextRequest): string | null {
 
 export function setAuthCookie(response: NextResponse, token: string): NextResponse {
   response.cookies.set('auth-token', token, {
-    httpOnly: false, // Cambiar a false temporalmente para que funcione la autenticación
+    httpOnly: process.env.NODE_ENV === 'production',
     secure: process.env.NODE_ENV === 'production',
     sameSite: 'lax',
     maxAge: 7 * 24 * 60 * 60, // 7 días

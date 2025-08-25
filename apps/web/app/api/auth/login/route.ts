@@ -15,6 +15,9 @@ const loginSchema = z.object({
 
 export async function POST(request: NextRequest) {
   try {
+    if (process.env.NODE_ENV === 'production') {
+      console.log(`[LOGIN] Intento de login: email=${request?.body?.email || 'N/A'} ip=${request.headers.get('x-forwarded-for') || request.headers.get('host')}`);
+    }
     const body = await request.json();
     const { email, password } = loginSchema.parse(body);
 
@@ -26,6 +29,9 @@ export async function POST(request: NextRequest) {
     ` as any[];
 
     if (!user || user.length === 0) {
+      if (process.env.NODE_ENV === 'production') {
+        console.log(`[LOGIN] Fallo: usuario no encontrado para email=${email}`);
+      }
       return NextResponse.json(
         { error: 'Credenciales inválidas' },
         { status: 401 }
@@ -36,6 +42,9 @@ export async function POST(request: NextRequest) {
 
     // Verificar contraseña
     if (!userData.password) {
+      if (process.env.NODE_ENV === 'production') {
+        console.log(`[LOGIN] Fallo: usuario sin contraseña configurada email=${email}`);
+      }
       return NextResponse.json(
         { error: 'Este usuario no tiene contraseña configurada' },
         { status: 401 }
@@ -44,6 +53,9 @@ export async function POST(request: NextRequest) {
 
     const isPasswordValid = await compare(password, userData.password);
     if (!isPasswordValid) {
+      if (process.env.NODE_ENV === 'production') {
+        console.log(`[LOGIN] Fallo: contraseña inválida para email=${email}`);
+      }
       return NextResponse.json(
         { error: 'Credenciales inválidas' },
         { status: 401 }
@@ -51,6 +63,9 @@ export async function POST(request: NextRequest) {
     }
 
     // Buscar roles del usuario
+    if (process.env.NODE_ENV === 'production') {
+      console.log(`[LOGIN] Éxito: usuario autenticado email=${email} id=${userData.id}`);
+    }
     const roles = await prisma.$queryRaw`
       SELECT r.name, r.description
       FROM roles r

@@ -39,7 +39,9 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
   const checkSession = async () => {
     try {
-      const response = await fetch('/api/auth/session');
+      const response = await fetch('/api/auth/session', {
+        credentials: 'include'
+      });
       if (response.ok) {
         const data = await response.json();
         setUser(data.user);
@@ -65,6 +67,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({ email, password }),
+        credentials: 'include'
       });
 
       const data = await response.json();
