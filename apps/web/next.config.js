@@ -13,6 +13,10 @@ const nextConfig = {
   images: {
     unoptimized: true,
   },
+  // Configuración específica para Vercel
+  output: 'standalone',
+  generateEtags: false,
+  poweredByHeader: false,
   webpack: (config, { isServer }) => {
     // Alias '@' para importar desde la raíz de apps/web
     const path = require('path');

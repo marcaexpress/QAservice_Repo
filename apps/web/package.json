@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "prebuild": "prisma generate --schema=prisma/schema.prisma && tailwindcss -c tailwind.config.js -i ./app/globals.css -o ./public/_tw.css --minify || echo \"⚠️ Fallback Tailwind emitido\"",
+    "prebuild": "prisma generate --schema=prisma/schema.prisma && tailwindcss -c tailwind.config.ts -i ./app/globals.css -o ./public/_tw.css --minify || echo \"⚠️ Fallback Tailwind emitido\"",
     "dev": "next dev",
     "build": "npm run prebuild && next build --no-lint || echo \"✅ Build completed with warnings\"",
     "build:strict": "prisma generate --schema=../../prisma/schema.prisma && next build",

@@ -1,9 +1,4 @@
-import { Metadata } from 'next'
-
-export const metadata: Metadata = {
-  title: 'Error | QA Services',
-  description: 'Ha ocurrido un error.',
-}
+'use client'
 
 export default function GlobalError({
   error,

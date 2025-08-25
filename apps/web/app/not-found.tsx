@@ -5,6 +5,8 @@ export const metadata: Metadata = {
   description: 'La página que buscas no existe.',
 }
 
+'use client'
+
 export default function NotFound() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50">
