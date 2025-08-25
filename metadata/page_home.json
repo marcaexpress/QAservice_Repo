@@ -1,0 +1,18 @@
+{
+  "type": "page",
+  "title": "Inicio",
+  "slug": "home",
+  "description": "Página principal del sitio",
+  "status": "PUBLISHED",
+  "published": true,
+  "organizationId": "org_qa_services",
+  "blocks": [
+    {
+      "type": "hero",
+      "content": {
+        "title": "Bienvenido a QA Services",
+        "subtitle": "Consultoría en Testing de Software"
+      }
+    }
+  ]
+}

@@ -6,6 +6,11 @@ const nextConfig = {
   swcMinify: false,
   eslint: { ignoreDuringBuilds: true },
   experimental: { externalDir: true },
+  output: 'standalone',
+  trailingSlash: true,
+  images: {
+    unoptimized: true,
+  },
   webpack: (config, { isServer }) => {
     // Alias '@' para importar desde la raíz de apps/web
     const path = require('path');

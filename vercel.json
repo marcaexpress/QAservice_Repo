@@ -1,11 +1,17 @@
 {
   "version": 2,
-  "buildCommand": "npm run build",
+  "buildCommand": "cd apps/web && npm run build",
   "devCommand": "npm run dev",
   "installCommand": "npm install",
   "framework": "nextjs",
-  "outputDirectory": ".next",
-  "env": {},
+  "outputDirectory": "apps/web/.next",
+  "env": {
+    "NODE_ENV": "production",
+    "DATABASE_URL": "@database_url",
+    "NEXTAUTH_SECRET": "@nextauth_secret",
+    "JWT_SECRET": "@jwt_secret",
+    "NEXTAUTH_URL": "@nextauth_url"
+  },
   "build": {
     "env": {
       "NODE_ENV": "production"

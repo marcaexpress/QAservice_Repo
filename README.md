@@ -9,9 +9,11 @@ QA Services es una plataforma moderna y escalable para la gestión de servicios 
 ## 🚀 Despliegue Rápido
 
 ### Opción 1: Vercel (Recomendado)
+
 [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/tu-usuario/qa-services)
 
 ### Opción 2: Despliegue Manual
+
 ```bash
 # Clonar repositorio
 git clone https://github.com/tu-usuario/qa-services.git
@@ -29,6 +31,7 @@ npx prisma db seed
 
 # Iniciar desarrollo
 npm run dev
+
 ```
 
 ## 🛠️ Tecnologías
@@ -44,7 +47,7 @@ npm run dev
 
 ## 📁 Estructura del Proyecto
 
-```
+```ini
 qa-services/
 ├── apps/
 │   └── web/                 # Aplicación principal Next.js
@@ -57,6 +60,7 @@ qa-services/
 │   ├── cms-core/         # Lógica del CMS
 │   └── config/           # Configuraciones compartidas
 └── TAREAS/               # Documentación del proyecto
+
 ```
 
 ## 🔐 Variables de Entorno
@@ -78,6 +82,7 @@ CMS_PREVIEW_ENABLED=true
 
 # Entorno
 NODE_ENV=development
+
 ```
 
 ## 🚀 Comandos Disponibles
@@ -101,6 +106,7 @@ npm run test:playwright # Ejecutar tests con Playwright
 # Linting y Formateo
 npm run lint            # Verificar código
 npm run format          # Formatear código
+
 ```
 
 ## 🌐 URLs de la Aplicación
@@ -115,10 +121,12 @@ npm run format          # Formatear código
 ## 🔑 Acceso de Prueba
 
 **Administrador:**
+
 - Email: `admin@qaservices.com`
 - Password: `admin123`
 
 **Editor CMS:**
+
 - Email: `editor@qaservices.com`
 - Password: `editor123`
 

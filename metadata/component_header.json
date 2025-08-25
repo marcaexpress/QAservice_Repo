@@ -1,0 +1,12 @@
+{
+  "type": "component",
+  "name": "layout_header",
+  "category": "navigation",
+  "description": "Header principal con logo y menú de navegación",
+  "isActive": true,
+  "organizationId": "org_qa_services",
+  "properties": [
+    { "name": "siteName", "type": "string", "value": "Mi Sitio Web", "required": true, "order": 1 },
+    { "name": "logo", "type": "string", "value": "logo.png", "required": false, "order": 2 }
+  ]
+}

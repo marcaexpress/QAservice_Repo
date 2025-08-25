@@ -37,6 +37,14 @@ jobs:
             exit 1
           fi
           echo "✅ CSS generado: $(ls -lh public/_tw.css)"
+      
+        - name: Baseline DB schema (init.sql)
+          env:
+            DATABASE_URL: ${{ secrets.DATABASE_URL_PRODUCTION }}
+          run: |
+            echo "🗄️ Ejecutando baseline init.sql en la base de datos..."
+            psql "$DATABASE_URL" -f prisma/init.sql
+            echo "✅ Baseline aplicado"
 
       - name: Generate Prisma client
         run: |
@@ -51,6 +59,14 @@ jobs:
           cd apps/web
           npx prisma migrate deploy --schema=../../prisma/schema.prisma
           echo "✅ Migraciones completadas"
+
+      - name: Sync metadata (componentes y páginas)
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL_PRODUCTION }}
+        run: |
+          echo "🔄 Sincronizando metadata desde JSON..."
+          npx ts-node scripts/sync-metadata.ts
+          echo "✅ Metadata sincronizada"
 
       - name: Run tests
         run: |
@@ -77,4 +93,4 @@ jobs:
         run: |
           echo "🔎 Realizando healthcheck post-deploy..."
           sleep 20
-          curl -f https://qa-services-d849kxe3s-marcaexpress-projects.vercel.app/api/health || (echo "❌ Healthcheck fallido" && exit 1)
+          node -e "require('https').get('https://qa-services-d849kxe3s-marcaexpress-projects.vercel.app/api/health', res => { if(res.statusCode !== 200) { console.error('❌ Healthcheck fallido'); process.exit(1); } else { console.log('✅ Healthcheck OK'); } }).on('error', e => { console.error('❌ Healthcheck fallido'); process.exit(1); });"
