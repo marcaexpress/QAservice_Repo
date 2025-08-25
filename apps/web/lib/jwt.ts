@@ -62,9 +62,13 @@ export function getTokenFromRequest(request: NextRequest): string | null {
       }
       return acc;
     }, {} as Record<string, string>);
-    
+    // Buscar en auth-token
     if (cookies['auth-token']) {
       return cookies['auth-token'];
+    }
+    // Buscar en _vercel_jwt
+    if (cookies['_vercel_jwt']) {
+      return cookies['_vercel_jwt'];
     }
   }
 
