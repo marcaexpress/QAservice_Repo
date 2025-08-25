@@ -12,11 +12,11 @@ const registerSchema = z.object({
 
 export async function POST(request: NextRequest) {
   try {
-    if (process.env.NODE_ENV === 'production') {
-      console.log(`[REGISTER] Intento de registro: email=${request?.body?.email || 'N/A'} ip=${request.headers.get('x-forwarded-for') || request.headers.get('host')}`);
-    }
     const body = await request.json();
     const { email, password, name } = registerSchema.parse(body);
+    if (process.env.NODE_ENV === 'production') {
+      console.log(`[REGISTER] Intento de registro: email=${email} ip=${request.headers.get('x-forwarded-for') || request.headers.get('host')}`);
+    }
 
     // Verificar si el usuario ya existe
     const existingUser = await prisma.user.findUnique({
@@ -53,16 +53,16 @@ export async function POST(request: NextRequest) {
 
     // Crear el usuario
     const user = await prisma.user.create({
-    if (process.env.NODE_ENV === 'production') {
-      console.log(`[REGISTER] Éxito: usuario registrado email=${email} id=${user.id}`);
-    }
       data: {
         email,
         password: hashedPassword,
         name,
         organizationId: organization.id,
-      },
+      }
     });
+    if (process.env.NODE_ENV === 'production') {
+      console.log(`[REGISTER] Éxito: usuario registrado email=${email} id=${user.id}`);
+    }
 
     // Asignar rol de usuario básico (puedes crear un rol "Usuario" si quieres)
     const userRole = await prisma.role.findFirst({
