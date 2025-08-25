@@ -15,11 +15,11 @@ const loginSchema = z.object({
 
 export async function POST(request: NextRequest) {
   try {
-    if (process.env.NODE_ENV === 'production') {
-      console.log(`[LOGIN] Intento de login: email=${request?.body?.email || 'N/A'} ip=${request.headers.get('x-forwarded-for') || request.headers.get('host')}`);
-    }
     const body = await request.json();
     const { email, password } = loginSchema.parse(body);
+    if (process.env.NODE_ENV === 'production') {
+      console.log(`[LOGIN] Intento de login: email=${email} ip=${request.headers.get('x-forwarded-for') || request.headers.get('host')}`);
+    }
 
     // Buscar usuario con password usando raw query para evitar problemas de tipos
     const user = await prisma.$queryRaw`
